@@ -1,0 +1,170 @@
+﻿@model object
+
+@{
+    Layout = "BaseLayoutBackend";
+}
+<div id="customer_table_view_app">
+    <div class="columns is-desktop">
+        <div class="column">
+            <h3 class="title">Kunde erstellen</h3>
+            <div class="field">
+                <label class="label">Name</label>
+                <div class="control">
+                    <input v-model="create_customer_form.name" class="input" type="text" placeholder="Kunde">
+                </div>
+                <p class="help">Den Kundennamen eingeben.</p>
+            </div>
+            <div class="control">
+                <button class="button is-primary" v-on:click="create_customer()">Erstellen</button>
+            </div>
+        </div>
+        <div class="column">
+            <nav class="level">
+                <!-- Left side -->
+                <div class="level-left">
+                    <div class="level-item">
+                        <p class="subtitle is-5">
+                            <strong>Kunden</strong>
+                        </p>
+                    </div>
+                    <div class="level-item">
+                        <div class="field has-addons">
+                            <p class="control">
+                                <input v-model="search" class="input" type="text" placeholder="Ein Kunde suchen">
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            <div class="table-container ">
+                    <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Aktion</th>
+                        </tr>
+                        <tbody v-for="(customer, index) in filteredCustomers">
+                        <tr v-show="edit_row != customer.id">
+                            <td>
+                                {{customer.id}}
+                            </td>
+                            <td>
+                                {{customer.name}}
+                            </td>
+                            <td>
+                                <div class="buttons are-small">
+                                    <button class="button is-danger" v-show="delete_row == -1" v-on:click="delete_row = customer.id">Löschen</button>
+                                    <button class="button is-danger" v-show="delete_row == customer.id" v-on:click="delete_customer(index, customer)">Löschen bestätigen</button>
+                                    <button class="button is-warning" v-show="delete_row == customer.id" v-on:click="delete_row = -1">Löschen abbrechen</button>
+                                    <button v-on:click="edit_row = customer.id" v-show="delete_row == -1 && edit_row == -1" class="button is-info">Bearbeiten</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr v-show="edit_row == customer.id">
+                            <td>
+                                {{customer.id}}
+                            </td>
+                            <td>
+                                <input v-model="customer.name" class="input" type="text">
+                            </td>
+                            <td>
+                                 <div class="buttons are-small">
+                                    <button v-on:click="update_customer(index, customer)" class="button is-success">Speichern</button>
+                                 </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+        </div>
+        </div>
+</div>
+<script>
+var customer_table_view_app = new Vue({
+  el: '#customer_table_view_app',
+  data: {
+       customers:[
+           {
+               Id:1,
+               Name:"Test"
+           }
+       ],
+       create_customer_form:{
+           name:""
+       },
+       edit_row:-1,
+       delete_row:-1,
+       search:""
+  },
+    computed:{
+        filteredCustomers:function ()
+        {
+            return this.customers.filter((a) => {
+                                                   
+                 if (this.search === ""){ return true; }
+               
+                 let found = false;
+                 
+                 if (a.name.indexOf(this.search) !== -1)
+                 {
+                     found = true;
+                 }
+                 
+                 return found;
+           })
+        }
+    },
+  methods:{
+      load_customers:function (){
+          progress_bar_app.loading = true;
+          axios.get("/customer/api/list").then((response) => {
+              console.log(response);
+              this.customers = response.data;
+          }).catch((error) => {
+              console.log(error);
+          }).then(() => {
+              progress_bar_app.loading = false;
+          });
+      },
+      create_customer:function (){
+          progress_bar_app.loading = true;
+          axios.put("/customer/api", {name:this.create_customer_form.name}).then((response) => {
+              console.log(response);
+              this.customers.push(response.data);
+          }).catch((error) => {
+              console.log(error);
+          }).then(() => {
+              this.create_customer_form.name = "";
+              progress_bar_app.loading = false;
+          });
+      },
+      update_customer:function (index, customer){
+        this.edit_row = -1;
+        progress_bar_app.loading = true;
+        axios.patch("/customer/api/" + customer.id.toString(), {name:customer.name}).then((response) => {
+            console.log(response);
+            this.customers.splice(index, 1, response.data);
+        }).catch((error) => {
+            console.log(error);
+        }).then(() => {
+            progress_bar_app.loading = false;
+        });
+      },
+      delete_customer:function (index, customer){
+        this.delete_row = -1;
+        this.edit_row = -1;
+        progress_bar_app.loading = true;
+        axios.delete("/customer/api/" + customer.id.toString()).then((response) => {
+            console.log(response);
+            this.customers.splice(index, 1);
+        }).catch((error) => {
+            console.log(error);
+        }).then(() => {
+            progress_bar_app.loading = false;
+        });
+      }
+  }
+});
+
+customer_table_view_app.load_customers();
+</script>

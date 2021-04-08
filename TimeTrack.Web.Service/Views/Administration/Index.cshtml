@@ -1,0 +1,246 @@
+﻿@model object
+
+@{
+    Layout = "BaseLayoutBackend";
+}
+
+<div id="admin_table_view_app">
+    <div class="columns is-desktop">
+        <div class="column">
+            <h3 class="title">Mitglied erstellen</h3>
+            <div class="field">
+                <label class="label">E-Mail:</label>
+                <div class="control">
+                    <input v-model="create_form.mail" class="input" type="email" placeholder="beispiel@@beispiel.net">
+                </div>
+                <p class="help">Eine E-Mail eintragen</p>
+            </div>
+            <div class="columns">
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Vorname:</label>
+                        <div class="control">
+                            <input v-model="create_form.givenName" class="input" type="text" placeholder="Max">
+                        </div>
+                        <p class="help">Ein Vornamen eintragen</p>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Nachname:</label>
+                        <div class="control">
+                            <input v-model="create_form.surname" class="input" type="text" placeholder="Mustermann">
+                        </div>
+                        <p class="help">Ein Nachnamen eintragen</p>
+                    </div>
+                </div>
+            </div>
+            <div class="columns">
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Passwort:</label>
+                        <div class="control">
+                            <input v-model="create_form.password" class="input" type="password">
+                        </div>
+                        <p class="help">Passwort</p>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Rolle:</label>
+                        <div class="control">
+                            <div class="select is-fullwidth">
+                                <select v-model="create_form.role">
+                                    <option v-for="(role, index) in roles" v-bind:value="index">{{role}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="control">
+                <button class="button is-primary" v-on:click="create_member()">Erstellen</button>
+            </div>
+        </div>
+        <div class="column">
+            <nav class="level">
+                <!-- Left side -->
+                <div class="level-left">
+                    <div class="level-item">
+                        <p class="subtitle is-5">
+                            <strong>Mitglieder</strong>
+                        </p>
+                    </div>
+                    <div class="level-item">
+                        <div class="field has-addons">
+                            <p class="control">
+                                <input v-model="search" class="input" type="text" placeholder="Ein Mitglied suchen">
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            <div class="table-container ">
+                <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+                    <tr>
+                        <th>#</th>
+                        <th>E-Mail</th>
+                        <th>Vorname</th>
+                        <th>Nachname</th>
+                        <th>Aktiv</th>
+                        <th>Aktion</th>
+                    </tr>
+                    <tbody v-for="(member, index) in filteredMembers">
+                    <tr v-show="edit_row != member.id">
+                        <td>
+                            {{member.id}}
+                        </td>
+                        <td>
+                            {{member.mail}}
+                        </td>
+                        <td>
+                            {{member.givenName}}
+                        </td>
+                        <td>
+                            {{member.surname}}
+                        </td>
+                        <td>
+                            {{member.active ? 'ja' : 'nein'}}
+                        </td>
+                        <td>
+                            <div class="buttons are-small">
+                                <button class="button is-danger" v-show="delete_row == -1" v-on:click="delete_row = member.id">Löschen</button>
+                                <button class="button is-danger" v-show="delete_row == member.id" v-on:click="delete_member(index, member)">Löschen bestätigen</button>
+                                <button class="button is-warning" v-show="delete_row == member.id" v-on:click="delete_row = -1">Löschen abbrechen</button>
+                                <button v-on:click="edit_row = member.id" v-show="delete_row == -1 && edit_row == -1" class="button is-info">Bearbeiten</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr v-show="edit_row == member.id">
+                        <td>
+                            {{member.id}}
+                        </td>
+                        <td>
+                            <input v-model="member.mail" class="input" type="email">
+                        </td>
+                        <td>
+                            <input v-model="member.givenName" class="input" type="text">
+                        </td>
+                        <td>
+                            <input v-model="member.surname" class="input" type="text">
+                        </td>
+                        <td>
+                            <label class="checkbox">
+                              <input v-model="member.active" type="checkbox">
+                              Aktiviert
+                            </label>
+                        </td>
+                        
+                        <td>
+                            <div class="buttons are-small">
+                                <button v-on:click="update_member(index, member)" class="button is-success">Speichern</button>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+var admin_table_view_app = new Vue({
+  el: '#admin_table_view_app',
+  data: {
+       members:[
+       ],
+       roles:[
+           "Admin",
+           "Modereator",
+           "User"
+       ],
+       create_form:{
+           mail:"",
+           givenName:"",
+           surname:"",
+           password:"",
+           role:0
+       },
+       edit_row:-1,
+       delete_row:-1,
+       search:""
+  },
+    computed:{
+        filteredMembers:function ()
+        {
+            return this.members.filter((a) => {
+                                                   
+                 if (this.search === ""){ return true; }
+               
+                 let found = false;
+                 
+                 if (a.mail.indexOf(this.search) !== -1)
+                 {
+                     found = true;
+                 }
+                 
+                 return found;
+           })
+        }
+    },
+  methods:{
+      load_members:function (){
+          progress_bar_app.loading = true;
+          axios.get("/administration/api/member/list").then((response) => {
+              console.log(response);
+              this.members = response.data;
+          }).catch((error) => {
+              console.log(error);
+          }).then(() => {
+              progress_bar_app.loading = false;
+          });
+      },
+      create_member:function (){
+          progress_bar_app.loading = true;
+          axios.put("/administration/api/member", this.create_form).then((response) => {
+              console.log(response);
+              this.members.push(response.data);
+          }).catch((error) => {
+              console.log(error);
+          }).then(() => {
+              this.create_form.name = "";
+              progress_bar_app.loading = false;
+          });
+      },
+      update_member:function (index, member){
+        this.edit_row = -1;
+        progress_bar_app.loading = true;
+        axios.patch("/administration/api/member/" + member.id.toString(), member).then((response) => {
+            console.log(response);
+            this.members.splice(index, 1, response.data);
+        }).catch((error) => {
+            console.log(error);
+        }).then(() => {
+            progress_bar_app.loading = false;
+        });
+      },
+      delete_member:function (index, member){
+        this.delete_row = -1;
+        this.edit_row = -1;
+        progress_bar_app.loading = true;
+        axios.delete("/administration/api/member/" + member.id.toString()).then((response) => {
+            console.log(response);
+            this.members.splice(index, 1);
+        }).catch((error) => {
+            console.log(error);
+        }).then(() => {
+            progress_bar_app.loading = false;
+        });
+      }
+  }
+});
+
+admin_table_view_app.load_members();
+</script>

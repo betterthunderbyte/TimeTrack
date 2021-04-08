@@ -1,0 +1,437 @@
+﻿@model object
+
+@{
+    Layout = "BaseLayoutBackend";
+    ViewBag.Title = "Aktivitäten";
+}
+
+<div class="columns is-desktop" id="activity_table_view_app">
+       
+    <div class="column">
+        <h3 class="title">Aktivität anlegen</h3>
+        <div class="columns">
+            <div class="column">
+                <div class="field is-narrow is-horizontal">
+                    <div class="field-label is-normal">
+                        <label class="label">Tätigkeit</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field is-fullwidth">
+                            <div class="control">
+                                <div class="select is-primary ">
+                                    <select v-model="create_activity_form.activity_type_fk">
+
+                                        <option v-for="activity_type in activity_types" v-bind:value="activity_type.id">{{activity_type.title}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="field is-narrow is-horizontal">
+                    <div class="field-label is-normal">
+                        <label class="label">Projekt</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field is-fullwidth">
+                            <div class="control">
+                                <div class="select is-primary ">
+                                    <select v-model="create_activity_form.project_fk">
+
+                                        <option v-for="project in projects" v-bind:value="project.id">{{project.name}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="field is-narrow is-horizontal">
+                    <div class="field-label is-normal">
+                        <label class="label">Kunde</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field is-fullwidth">
+                            <div class="control">
+                                <div class="select is-primary ">
+                                    <select v-model="create_activity_form.customer_fk">
+
+                                        <option v-for="customer in customers" v-bind:value="customer.id">{{customer.name}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      
+        <div class="columns">
+            <div class="column">
+                <div class="field">
+                    <label class="label">Tag</label>
+                    <div class="control">
+                        <input class="input" v-model="create_activity_form.date" v-bind:class="create_activity_form.date === '' ? 'is-danger' : 'is-success'" type="date">
+                    </div>
+                    <p class="help">Der Tag</p>
+                </div>
+            </div>
+            <div class="column">
+               <div class="field">
+                   <label class="label">Uhrzeit</label>
+                   <div class="control">
+                       <input v-model="create_activity_form.time" class="input" v-bind:class="create_activity_form.time === '' ? 'is-danger' : 'is-success'"  type="time">
+                   </div>
+                   <p class="help">Uhrzeit</p>
+               </div>
+            </div> 
+            <div class="column">
+                <div class="field">
+                    <label class="label">Dauer</label>
+                    <div class="control">
+                        <input v-model="create_activity_form.duration" class="input" v-bind:class="create_activity_form.duration === '' ? 'is-danger' : 'is-success'" type="time">
+                    </div>
+                    <p class="help">Die Dauer</p>
+                </div>
+            </div>
+        </div>
+        <div class="control">
+            <button class="button is-primary" v-on:click="create_activity()">Erstellen</button>
+        </div>
+    </div>
+        
+     <div class="column">
+         <div >
+             <nav class="level">
+                 <!-- Left side -->
+                 <div class="level-left">
+                     <div class="level-item">
+                         <p class="subtitle is-5">
+                             <strong>Aktivitäten</strong>
+                         </p>
+                     </div>
+                     <div class="level-item">
+                         <div class="field">
+                             <p class="control">
+                                 <input v-model="search" class="input" type="text" placeholder="Eine Aktivität suchen">
+                             </p>
+                         </div>
+                     </div>
+                 </div>
+             </nav>
+                <div class="table-container ">
+                    <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+                        <tr>
+                            <th>#</th>
+                            <th>Tag (dd.mm.yyyy hh:mm)</th>
+                            <th>Länge (hh:mm)</th>
+                            <th>Tätigkeit</th>
+                            <th>Projekt</th>
+                            <th>Kunde</th>
+                            <th>Aktion</th>
+                        </tr>
+                        <tbody v-for="(activity, index) in sortedActivities" :key="index">
+                        <tr v-show="edit_row != activity.id">
+                            <td>
+                                {{activity.id}}
+                            </td>
+                            <td>
+                                {{pad(activity.begin.day, 2)}}.{{pad(activity.begin.month, 2)}}.{{activity.begin.year}} 
+                                {{pad(activity.begin.time.hours, 2)}}:{{pad(activity.begin.time.minutes, 2)}}
+                            </td>
+                            <td>
+                                {{pad(activity.duration.hours, 2)}}:{{pad(activity.duration.minutes, 2)}}
+                            </td>            
+                            <td>
+                                {{ activity_types.find((x) => { return x.id == activity.activityTypeFk; }).title }}
+                            </td>   
+                            <td>
+                                {{ projects.find((x) => { return x.id == activity.projectFk; }).name }}
+                            </td>
+                            <td>
+                                {{ customers.find((x) => { return x.id == activity.customerFk; }).name }}
+                            </td>
+                            <td>
+                                <div class="buttons are-small">
+                                    <button v-show="delete_row == -1 && edit_row == -1" v-on:click="delete_row = activity.id" class="button is-danger">Löschen</button>
+                                    <button class="button is-danger" v-show="delete_row == activity.id" v-on:click="delete_activity(index, activity)">Löschen bestätigen</button>
+                                    <button class="button is-warning" v-show="delete_row == activity.id" v-on:click="delete_row = -1">Löschen abbrechen</button>
+                                    <button v-show="delete_row == -1 && edit_row == -1"  v-on:click="edit_row = activity.id" class="button is-info">Bearbeiten</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr v-show="edit_row == activity.id">
+                            <td>
+                                {{activity.id}}
+                            </td>
+                            <td>
+                                <div class="control">
+                                    <input v-model="activity.begin.defaultFormat" class="input" type="date">
+                                </div>
+                                <div class="control">
+                                    <input v-model="activity.begin.time.defaultFormatHHMM" class="input" type="time">
+                                </div>
+                            </td>
+                            <td>
+                                 <div class="control">
+                                    <input v-model="activity.duration.defaultFormatHHMM" class="input" type="time">
+                                 </div>
+                            </td>
+                            <td>
+                                <div class="select is-primary is-small">
+                                    <select v-model="activity.activityTypeFk">
+                                        <option v-for="activity_type in activity_types" v-bind:value="activity_type.id">{{activity_type.title}}</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="select is-primary is-small">
+                                    <select v-model="activity.projectFk">
+                                        <option v-for="project in projects" v-bind:value="project.id">{{project.name}}</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="select is-primary is-small">
+                                    <select v-model="activity.customerFk">
+                                        <option v-for="customer in customers" v-bind:value="customer.id">{{customer.name}}</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                 <div class="buttons are-small">
+                                    <button v-on:click="update_activity(index, activity)" class="button is-success">Speichern</button>
+                                 </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+         </div>
+    </div>
+<script>
+var activity_table_view_app = new Vue({
+  el: '#activity_table_view_app',
+  data: {
+       activities:[],
+       activity_types:[],
+       projects:[],
+       customers:[],
+       create_activity_form:{
+           date: "",
+           good_date:false,
+           time: "",
+           good_time:false,
+           duration:"",
+           good_duration:false,
+           activity_type_fk:1,
+           project_fk:1,
+           customer_fk:1
+       },
+       edit_row:-1,
+       delete_row:-1,
+       search:""
+  },
+  computed:{
+      sortedActivities:function (){
+          return this.activities.filter((a) => {
+              
+                if (this.search === ""){ return true; }
+              
+                let found = false;
+                
+                let at = this.activity_types.find(b => b.id === a.activityTypeFk);
+                let p = this.projects.find(b => b.id === a.projectFk);
+                let c = this.customers.find(b => b.id === a.customerFk);
+              
+                if (a.begin.defaultFormat.indexOf(this.search) !== -1)
+                {
+                    found = true;
+                }
+                else if (a.duration.defaultFormatHHMM.indexOf(this.search) !== -1)
+                {
+                    found = true;
+                } 
+                else if (a.begin.time.defaultFormatHHMM.indexOf(this.search) !== -1)
+                {
+                    found = true;
+                }
+                else if (at.title.indexOf(this.search) !== -1)
+                {
+                    found = true;
+                }
+                else if (p.name.indexOf(this.search) !== -1)
+                {
+                    found = true;
+                }
+                else if (c.name.indexOf(this.search) !== -1)
+                {
+                    found = true;
+                }
+                
+                return found;
+          }).sort((l, r) => {
+              return l.begin.ticks < r.begin.ticks;
+          });
+      }
+  },
+  mounted:function (){
+      this.load_full();
+  },
+  methods:{
+        pad:function (num, size) {
+          var s = "000000000" + num;
+          return s.substr(s.length-size);
+        },
+        parse_date:function (date)
+        {
+            const pieces = date.split("-");
+            
+            let year = 0;
+            let month = 0;
+            let day = 0;
+            
+            if (pieces.length > 2)
+            {
+                day = parseInt(pieces[2], 10);
+                if (day === null)
+                {
+                    day = 0;
+                }
+                month = parseInt(pieces[1], 10);
+                if (month === null)
+                {
+                    month = 0;
+                }
+                year = parseInt(pieces[0], 10);
+                if (year === null)
+                {
+                    year = 0;
+                }
+            }
+            
+            return {
+                year:year,
+                month:month,
+                day:day,
+            };
+        },
+        parse_time:function (time)
+        {
+            const pieces = time.split(":");
+            let hours = 0;
+            let minutes = 0;
+            let seconds = 0;
+            
+            if (pieces.length < 3)
+            {
+                hours = parseInt(pieces[0], 10);
+                if (hours === null)
+                {
+                    hours = 0;
+                }
+                
+                minutes = parseInt(pieces[1], 10);
+                if (minutes === null)
+                {
+                    minutes = 0;
+                }
+            }
+            
+            if (pieces.length > 2)
+            {
+                seconds = parseInt(pieces[2], 10);
+                if (seconds === null)
+                {
+                    seconds = 0;
+                }
+            }
+            
+            return {
+                 hours:hours,
+                 minutes:minutes,
+                 seconds:seconds
+            };
+        },
+        load_full:function (){
+          progress_bar_app.loading = true;
+          axios.get("/activity/api/full").then((response) => {
+              console.log(response);
+              this.activities = response.data.activities;
+              this.projects = response.data.projects;
+              this.customers = response.data.customers;
+              this.activity_types = response.data.activityTypes;
+          }).catch((error) => {
+              console.log(error);
+          }).then(() => {
+              progress_bar_app.loading = false;
+          });
+        },
+        create_activity:function (){
+            let begin = this.parse_date(this.create_activity_form.date);
+            let time = this.parse_time(this.create_activity_form.time);
+            let duration = this.parse_time(this.create_activity_form.duration);
+                    
+            begin["time"] = time;
+            
+            progress_bar_app.loading = true;
+            axios.put("/activity/api", {
+              Begin:begin,
+              Duration:duration,
+              ActivityTypeFk:this.create_activity_form.activity_type_fk,
+              ProjectFk:this.create_activity_form.project_fk,
+              CustomerFk:this.create_activity_form.customer_fk
+            }).then((response) => {
+              console.log(response);
+              this.activities.push(response.data);
+            }).catch((error) => {
+              console.log(error);
+            }).then(() => {
+              progress_bar_app.loading = false;
+            });
+        },
+        update_activity:function (index, activity){
+            progress_bar_app.loading = true;
+            
+            let begin = this.parse_date(activity.begin.defaultFormat);
+            let time = this.parse_time(activity.begin.time.defaultFormatHHMM);
+            let duration = this.parse_time(activity.duration.defaultFormatHHMM);
+                    
+            begin["time"] = time;
+            activity.begin = begin;
+            activity.duration = duration;
+            
+            axios.patch("/activity/api/" + activity.id.toString(), activity).then((response) => {
+                console.log(response);
+                this.activities.splice(index, 1, response.data);
+            }).catch((error) => {
+                console.log(error);
+            }).then(() => {
+                this.delete_row = -1;
+                this.edit_row = -1;
+                progress_bar_app.loading = false;
+            });
+        },
+        delete_activity:function (index, activity){
+            progress_bar_app.loading = true;
+            axios.delete("/activity/api/" + activity.id.toString()).then((response) => {
+                console.log(response);
+                this.activities.splice(index, 1);
+
+            }).catch((error) => {
+                console.log(error);
+            }).then(() => {
+                progress_bar_app.loading = false;
+                this.delete_row = -1;
+                this.edit_row = -1;
+            });
+        }
+  }
+});
+
+
+</script>

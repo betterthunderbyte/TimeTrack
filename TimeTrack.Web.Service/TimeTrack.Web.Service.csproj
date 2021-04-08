@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Release\TimeTrack.Web.Service.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DocumentationFile>bin\Release\TimeTrack.Web.Service.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.12" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.10" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.6.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="5.6.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="5.6.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\Start\Index.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Web\Activities.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Web\ActivityTypes.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Web\Customers.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Web\Index.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Web\Members.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Web\Projects.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Web\Statistics.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TimeTrack.Core\TimeTrack.Core.csproj" />
+    <ProjectReference Include="..\TimeTrack.Db\TimeTrack.Db.csproj" />
+  </ItemGroup>
+
+
+</Project>

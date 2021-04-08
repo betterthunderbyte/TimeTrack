@@ -1,0 +1,145 @@
+﻿@model object
+
+@{
+    Layout = "BaseLayoutBackend";
+}
+<div class="container" id="account_app">
+    <div class="columns">
+        <div class="column">
+            <h1 class="title">Konto</h1>
+        </div>
+        <div class="column">
+            <div class="columns">
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Vorname</label>
+                        <div class="control">
+                            <input v-model="givenName" class="input" type="text">
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Nachname</label>
+                        <div class="control">
+                            <input v-model="surname" class="input" type="text">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="columns">
+                <div class="column">
+                    <div class="field">
+                        <label class="label">E-Mail</label>
+                        <div class="control">
+                            <input v-model="mail" class="input" type="email">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="columns">
+                <div class="column">
+                    <div class="field is-grouped">
+                        <div class="control">
+                            <button class="button is-success">Speichern</button>
+                        </div>
+                        <div class="control">
+                            <button class="button is-link" v-on:click="isChangePasswordModalOpen = true">Passwort ändern</button>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" v-bind:class="isChangePasswordModalOpen ? 'is-active' : ''">
+        <div class="modal-background" v-on:click="isChangePasswordModalOpen = false"></div>
+        <div class="modal-content">
+            <div class="box">
+                <div class="columns">
+                    <div class="column">
+                        <div class="field">
+                            <label class="label">Momentanes Passwort</label>
+                            <div class="control">
+                                <input v-model="oldPassword" class="input" type="password">
+                            </div>
+                        </div>
+                
+                    </div>
+                </div>
+                <div class="columns">
+                    <div class="column">
+                        <div class="field">
+                            <label class="label">Neues Passwort</label>
+                            <div class="control">
+                                <input v-model="newPassword1" class="input" type="text">
+                            </div>
+                        </div>
+                                    
+                    </div>
+                    
+                    <div class="column">
+                        <div class="field">
+                            <label class="label">Neues Passwort wiederholen</label>
+                            <div class="control">
+                                <input v-model="newPassword2" class="input" type="text" >
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="columns">
+                    <div class="column">
+                        <div class="field is-grouped">
+                            <div class="control">
+                                <button class="button is-success">Passwort ändern</button>
+                            </div>
+                            <div class="control">
+                                <button class="button is-link is-light" v-on:click="isChangePasswordModalOpen = false">Abbrechen</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+           
+        </div>
+        <button class="modal-close is-large" aria-label="close" v-on:click="isChangePasswordModalOpen = false"></button>
+    </div>
+    
+</div>
+<script>
+    var account_app = new Vue({
+      el: '#account_app',
+      data: {
+           isChangePasswordModalOpen:false,
+           changePasswordForm:{
+               oldPassword:"",
+               newPassword1:"",
+               newPassword2:""
+           },
+           account:{
+              mail:"",
+              givenName:"",
+              surname:""
+           }
+      },
+      computed:{
+         
+      },
+      methods:{
+         loadAccount:function ()
+         {
+             
+         },
+         updateAccount:function ()
+         {
+         },
+         changePassword:function()
+         {
+             
+         }
+      }
+    });
+    
+    account_app.loadAccount();
+</script>

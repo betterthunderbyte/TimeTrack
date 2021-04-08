@@ -1,0 +1,151 @@
+﻿@using System.Security.Claims
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="/assets/favicon.png" sizes="128x128">
+    <title>Zeiterfassung - @ViewBag.Title</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <link href="https://cdn.materialdesignicons.com/5.4.55/css/materialdesignicons.min.css" rel="stylesheet">
+</head>
+<body>
+
+
+<section class="hero is-fullheight">
+    <div class="hero-head">
+        <div id="progress_bar_app">
+          <progress v-show="loading" class="progress is-small is-primary is-radiusless" max="100" style="margin-bottom: 0">15%</progress>
+          <progress v-show="!loading" class="progress is-small is-primary is-radiusless" max="100" value="0">15%</progress>
+        </div>
+        <script>
+          var progress_bar_app = new Vue({
+            el: '#progress_bar_app',
+            data:{
+              loading:false
+            }
+          });
+        </script>
+
+        <nav id="nav_app" class="navbar" role="navigation" aria-label="main navigation">
+          <div class="navbar-brand">
+            <a class="navbar-item has-text-weight-bold" href="/activity/index">
+              <img src="/assets/timer.svg" style="width:28px;height:28px;margin-right: 0.5em;">
+              Zeiterfassung
+            </a>
+
+            <a role="button" class="navbar-burger burger" v-bind:class="open ? 'is-active' : ''" v-on:click.prevent="open = !open" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
+            </a>
+          </div>
+
+          <div id="navbarBasicExample" class="navbar-menu " v-bind:class="open ? 'is-active' : ''">
+            <div class="navbar-start">
+              @if (false)
+              {
+               <a class="navbar-item" href="/statistic">Statistik</a>
+             
+              }
+              <a class="navbar-item" href="/activity">Aktivitäten</a>
+              @if (User.HasClaim(ClaimTypes.Role, "Admin") || User.HasClaim(ClaimTypes.Role, "Moderator"))
+              {
+                <a class="navbar-item" href="/project">Projekte</a>
+                <a class="navbar-item" href="/customer">Kunden</a>
+                <a class="navbar-item" href="/activitytype">Aktivitätentypen</a>
+              }
+              
+              <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link">
+                  Mehr
+                </a>
+
+                <div class="navbar-dropdown">
+                  @if (User.HasClaim(ClaimTypes.Role, "Admin"))
+                  {
+                  <a class="navbar-item" href="/administration">
+                  Administration
+                  </a>
+                  }
+                  @if (false)
+                  {
+                    <a class="navbar-item" href="/account/index">
+                      Konto
+                    </a>
+                  }
+                  <a class="navbar-item" href="/swagger/index.html">
+                    Schnittstellendokumentation
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div class="navbar-end">
+              <div class="navbar-item">
+                <div class="buttons">
+                  <a href="/account/logout" class="button is-light">
+                    Abmelden
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </nav>
+        <script>
+            var nav_app = new Vue({
+            el: '#nav_app',
+            data:{
+              open:false,
+              is_logged_in:false
+            },
+            methods:{
+               open_login_modal:function ()
+               {
+                login_app.open = true;
+               }
+            }
+            });
+        </script>
+        
+    </div>
+  <div class="hero-body is-align-items-start">
+      <div class="container is-fluid ">
+        <div id="message_app">
+            
+          <div v-show="open" class="notification" v-bind:class="'is-' + type">
+            <button class="delete" v-on:click="open = false"></button>
+            {{message}}
+          </div>
+        </div>
+        <script>
+         var message_app = new Vue({
+                    el: '#message_app',
+                    data:{
+                      open:false,
+                      message:"",
+                      type:"danger"
+                    }
+                  });
+        </script>
+
+        @RenderBody()
+      </div>
+  </div>
+  <div class="hero-foot">
+      <div class="container is-fluid">
+          <div class="content has-text-centered">
+              <p>Timetrack @@ 1.0.0</p>
+          </div>
+      </div>
+  </div>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,178 @@
+﻿@model object
+
+@{
+    Layout = "BaseLayoutBackend";
+    
+}
+
+<div id="project_table_view_app">
+
+    <div class="columns is-desktop">
+        <div class="column">
+            <h3 class="title">Projekt erstellen</h3>
+            <div class="field">
+                <label class="label">Name</label>
+                <div class="control">
+                    <input v-model="create_project_form.name" class="input" type="text" placeholder="Zeiterfassung">
+                </div>
+                <p class="help">Den Projektnamen eingeben.</p>
+            </div>
+
+
+            <div class="control">
+                <button class="button is-primary" v-on:click="create_project()">Erstellen</button>
+            </div>
+        </div>
+        <div class="column">
+            <nav class="level">
+                <!-- Left side -->
+                <div class="level-left">
+                    <div class="level-item">
+                        <p class="subtitle is-5">
+                            <strong>Projekte</strong>
+                        </p>
+                    </div>
+                    <div class="level-item">
+                        <div class="field has-addons">
+                            <p class="control">
+                                <input v-model="search" class="input" type="text" placeholder="Ein Projekt suchen">
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            <div class="table-container ">
+                <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Aktion</th>
+                    </tr>
+                    <tbody v-for="(project, index) in projects">
+                    <tr v-show="edit_row != project.id">
+                        <td>
+                            {{project.id}}
+                        </td>
+                        <td>
+                            {{project.name}}
+                        </td>
+                        <td>
+                            <div class="buttons are-small">
+                                <button class="button is-danger" v-show="delete_row == -1" v-on:click="delete_row = project.id">Löschen</button>
+                                <button class="button is-danger" v-show="delete_row == project.id" v-on:click="delete_project(index, project)">Löschen bestätigen</button>
+                                <button class="button is-warning" v-show="delete_row == project.id" v-on:click="delete_row = -1">Löschen abbrechen</button>
+                                <button v-on:click="edit_row = project.id" v-show="delete_row == -1 && edit_row == -1" class="button is-info">Bearbeiten</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr v-show="edit_row == project.id">
+                        <td>
+                            {{project.id}}
+                        </td>
+                        <td>
+                            <input v-model="project.name" class="input" type="text">
+                        </td>
+                        <td>
+                            <div class="buttons are-small">
+                                <button v-on:click="update_project(index, project)" class="button is-success">Speichern</button>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    
+</div>
+<script>
+var project_table_view_app = new Vue({
+  el: '#project_table_view_app',
+  data: {
+       projects:[
+           {
+               Id:1,
+               Name:"Test"
+           }
+       ],
+       create_project_form:{
+           name:""
+       },
+       edit_row:-1,
+       delete_row:-1,
+       search:""
+  },
+  computed:{
+      filteredCustomers:function ()
+      {
+          return this.projects.filter((a) => {
+                                                 
+               if (this.search === ""){ return true; }
+             
+               let found = false;
+               
+               if (a.name.indexOf(this.search) !== -1)
+               {
+                   found = true;
+               }
+               
+               return found;
+         })
+      }
+  },
+  methods:{
+      load_projects:function (){
+          progress_bar_app.loading = true;
+          axios.get("/project/api/list").then((response) => {
+              console.log(response);
+              this.projects = response.data;
+          }).catch((error) => {
+              console.log(error);
+          }).then(() => {
+              progress_bar_app.loading = false;
+          });
+      },
+      create_project:function (){
+          progress_bar_app.loading = true;
+          axios.put("/project/api", {name:this.create_project_form.name}).then((response) => {
+              console.log(response);
+              this.projects.push(response.data);
+          }).catch((error) => {
+              console.log(error);
+          }).then(() => {
+              this.create_project_form.name = "";
+              progress_bar_app.loading = false;
+          });
+      },
+      update_project:function (index, project){
+        this.edit_row = -1;
+        progress_bar_app.loading = true;
+        axios.patch("/project/api/" + project.id.toString(), {name:project.name}).then((response) => {
+            console.log(response);
+            this.projects.splice(index, 1, response.data);
+        }).catch((error) => {
+            console.log(error);
+        }).then(() => {
+            
+            progress_bar_app.loading = false;
+        });
+      },
+      delete_project:function (index, project){
+          this.delete_row = -1;
+          this.edit_row = -1;
+          progress_bar_app.loading = true;
+          axios.delete("/project/api/" + project.id.toString()).then((response) => {
+              console.log(response);
+              this.projects.splice(index, 1);
+          }).catch((error) => {
+              console.log(error);
+          }).then(() => {
+              progress_bar_app.loading = false;
+          });
+      }
+  }
+});
+
+project_table_view_app.load_projects();
+</script>

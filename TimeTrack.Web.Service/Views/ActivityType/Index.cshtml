@@ -1,0 +1,198 @@
+﻿@model object
+
+@{
+    Layout = "BaseLayoutBackend";
+    
+}
+
+<div id="activitytype_table_view_app">
+  
+    <div class="columns is-desktop">
+        <div class="column">
+            <h3 class="title">Aktivitätstyp erstellen</h3>
+            <div class="field">
+                <label class="label">Titel</label>
+                <div class="control">
+                    <input v-model="create_activitytype_form.title" class="input" type="text" placeholder="Programmieren">
+                </div>
+                <p class="help">Den Aktivitätsnamen eingeben.</p>
+            </div>
+            <div class="field">
+                <label class="label">Beschreibung</label>
+                <div class="control">
+                    <input v-model="create_activitytype_form.description" class="input" type="text" >
+                </div>
+                <p class="help">Eine optionale Beschreibung hinzufügen.</p>
+            </div>
+
+
+            <div class="control">
+                <button class="button is-primary" v-on:click="create_activitytype()">Erstellen</button>
+            </div>
+        </div>
+        <div class="column">
+            <nav class="level">
+                <!-- Left side -->
+                <div class="level-left">
+                    <div class="level-item">
+                        <p class="subtitle is-5">
+                            <strong>Aktivitätstypen</strong>
+                        </p>
+                    </div>
+                    <div class="level-item">
+                        <div class="field has-addons">
+                            <p class="control">
+                                <input v-model="search" class="input" type="text" placeholder="Ein Aktivitätstyp suchen">
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            <div class="table-container ">
+                    <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+                        <tr>
+                            <th>#</th>
+                            <th>Titel</th>
+                            <th>Beschreibung</th>
+                            <th>Aktion</th>
+                        </tr>
+                        <tbody v-for="(activitytype, index) in filteredActivityTypes">
+                        <tr v-show="edit_row != activitytype.id">
+                            <td>
+                                {{activitytype.id}}
+                            </td>
+                            <td>
+                                {{activitytype.title}}
+                            </td>
+                            <td>
+                                {{activitytype.description}}
+                            </td>
+                            <td>
+                                <div class="buttons are-small">
+                                    <button class="button is-danger" v-show="delete_row == -1" v-on:click="delete_row = activitytype.id">Löschen</button>
+                                    <button class="button is-danger" v-show="delete_row == activitytype.id" v-on:click="delete_activitytype(index, activitytype)">Löschen bestätigen</button>
+                                    <button class="button is-warning" v-show="delete_row == activitytype.id" v-on:click="delete_row = -1">Löschen abbrechen</button>
+                                    <button v-on:click="edit_row = activitytype.id" class="button is-info">Bearbeiten</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr v-show="edit_row == activitytype.id">
+                            <td>
+                                {{activitytype.id}}
+                            </td>
+                            <td>
+                                <input v-model="activitytype.title" class="input is-rounded" type="text">
+                            </td>
+                            <td>
+                                <input v-model="activitytype.description" class="input is-rounded" type="text">
+                            </td>
+                            <td>
+                                 <div class="buttons are-small">
+                                    <button v-on:click="update_activitytype(index, activitytype)" class="button is-success">Speichern</button>
+                                 </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+        </div>
+       
+    </div>
+    
+</div>
+<script>
+var activitytype_table_view_app = new Vue({
+  el: '#activitytype_table_view_app',
+  data: {
+       activitytypes:[
+         
+       ],
+       create_activitytype_form:{
+           title:"",
+           description:""
+       },
+       edit_row:-1,
+       delete_row:-1,
+       search:""
+  },
+  computed:{
+      filteredActivityTypes:function ()
+      {
+          return this.activitytypes.filter((a) => {
+                                                 
+               if (this.search === ""){ return true; }
+             
+               let found = false;
+               
+               if (a.title.indexOf(this.search) !== -1)
+               {
+                   found = true;
+               }
+               else if (a.description !== null && a.description.indexOf(this.search) !== -1)
+               {
+                   found = true;
+               }
+               
+               return found;
+         })
+      }
+  },
+  methods:{
+      load_activitytypes:function (){
+          progress_bar_app.loading = true;
+          axios.get("/activitytype/api/list").then((response) => {
+              console.log(response);
+              this.activitytypes = response.data;
+          }).catch((error) => {
+              console.log(error);
+          }).then(() => {
+              progress_bar_app.loading = false;
+          });
+      },
+      create_activitytype:function (){
+          progress_bar_app.loading = true;
+          axios.put("/activitytype/api", {
+              title:this.create_activitytype_form.title,
+              description:this.create_activitytype_form.description
+          }).then((response) => {
+              console.log(response);
+              this.activitytypes.push(response.data);
+          }).catch((error) => {
+              console.log(error);
+          }).then(() => {
+              this.create_activitytype_form.name = "";
+              progress_bar_app.loading = false;
+          });
+      },
+      update_activitytype:function (index, activitytype){
+        this.delete_row = -1;
+        this.edit_row = -1;
+        progress_bar_app.loading = true;
+        axios.patch("/activitytype/api/" + activitytype.id.toString(), {title:activitytype.title, description:activitytype.description}).then((response) => {
+            console.log(response);
+            this.activitytypes.splice(index, 1, response.data);
+        }).catch((error) => {
+            console.log(error);
+        }).then(() => {
+            
+            progress_bar_app.loading = false;
+        });
+      },
+      delete_activitytype:function (index, activitytype){
+          this.delete_row = -1;
+          this.edit_row = -1;
+          progress_bar_app.loading = true;
+          axios.delete("/activitytype/api/" + activitytype.id.toString()).then((response) => {
+              console.log(response);
+              this.activitytypes.splice(index, 1);
+          }).catch((error) => {
+              console.log(error);
+          }).then(() => {
+              progress_bar_app.loading = false;
+          });
+      }
+  }
+});
+
+activitytype_table_view_app.load_activitytypes();
+</script>

@@ -1,0 +1,154 @@
+﻿@model object
+
+@{
+    Layout = "BaseLayoutBackend";
+}
+<div id="statistic_view_app">
+    <div class="tile is-ancestor">
+        <div class="tile is-vertical is-8">
+            <div class="tile">
+                <div class="tile is-parent is-vertical">
+                    <article class="tile is-child notification is-primary">
+                        <p class="title">Vertical...</p>
+                        <p class="subtitle">Top tile</p>
+                    </article>
+                    <article class="tile is-child notification is-warning">
+                        <p class="title">...tiles</p>
+                        <p class="subtitle">Bottom tile</p>
+                    </article>
+                </div>
+                <div class="tile is-parent">
+                    <article class="tile is-child notification is-info">
+                        <p class="title">Tätigkeiten</p>
+                        <p class="subtitle">With an image</p>
+                        <div class="container box">
+                            <canvas id="activity_types_chart"></canvas>
+                        </div>
+                    </article>
+                </div>
+            </div>
+            <div class="tile is-parent">
+                <article class="tile is-child notification is-danger">
+                    <p class="title">Wochenansicht</p>
+                    <p class="subtitle">Alle Stunden dieser Woche</p>
+                    <div class="content">
+                        <div class="container box">
+                            <canvas id="week_chart"></canvas>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+        <div class="tile is-parent">
+            <article class="tile is-child notification is-success">
+                <div class="content">
+                    <p class="title">Tall tile</p>
+                    <p class="subtitle">With even more content</p>
+                    <div class="content">
+                        <!-- Content -->
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+</div>
+<script>
+var statistic_view_app = new Vue({
+  el: '#statistic_view_app',
+  data: {
+       week_chart:null,
+       activity_type_chart:null
+  },
+  mounted:function (){
+      this.week_chart = new Chart(document.getElementById('week_chart').getContext('2d'), {
+          type: 'bar',
+          data: {
+              labels: ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'],
+              datasets: [{
+                  label: 'Stunden',
+                  data: [],
+                  backgroundColor: [
+                      'rgba(255, 159, 64, 0.2)',
+                      'rgba(255, 159, 64, 0.2)',
+                      'rgba(255, 159, 64, 0.2)',
+                      'rgba(255, 159, 64, 0.2)',
+                      'rgba(255, 159, 64, 0.2)',
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(255, 99, 132, 0.2)'
+                  ],
+                  borderColor: [
+                      'rgba(255, 159, 64, 1)',
+                      'rgba(255, 159, 64, 1)',
+                      'rgba(255, 159, 64, 1)',
+                      'rgba(255, 159, 64, 1)',
+                      'rgba(255, 159, 64, 1)',
+                      'rgba(255, 99, 132, 1)',
+                      'rgba(255, 99, 132, 1)'
+                  ],
+                  borderWidth: 1
+              }]
+          },
+          options: {
+              scales: {
+                  yAxes: [{
+                      ticks: {
+                          beginAtZero: true
+                      }
+                  }]
+              },
+              responsive: true
+          }
+      });
+      this.activity_type_chart = new Chart(document.getElementById('activity_types_chart').getContext('2d'), {
+                type: 'pie',
+                data: {
+                    labels: ['Programmieren', 'Testen', 'Dokumentieren', 'Fehler beheben'],
+                    datasets: [{
+                        label: 'Stunden',
+                        data: [10,5,3,6],
+                        backgroundColor: [
+                            'rgba(255, 159, 64, 0.2)',
+                            'rgba(255, 255, 64, 0.2)',
+                            'rgba(255, 159, 255, 0.2)',
+                            'rgba(0, 255, 64, 0.2)'
+         
+                        ],
+                        borderColor: [
+                            'rgba(255, 159, 64, 1)',
+                            'rgba(255, 159, 64, 1)',
+                            'rgba(255, 159, 64, 1)',
+                            'rgba(255, 159, 64, 1)'
+          
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true
+                }
+            });
+      this.load_week_data();
+  },
+  methods:{
+      load_week_data:function (){
+          progress_bar_app.loading = true;
+          axios.get("/statistic/api/duration/from/week/in/days").then((response) => {
+              console.log(response.data);
+              this.week_chart.data.datasets[0].data = [];
+
+              let d = Object.entries(response.data);
+              
+              d.forEach(x => {
+                  this.week_chart.data.datasets[0].data.push(x[1].asHours);
+              });
+              this.week_chart.update();
+              
+          }).catch((error) => {
+              console.log(error);
+          }).then(() => {
+              progress_bar_app.loading = false;
+          });
+      },
+  }
+});
+</script>

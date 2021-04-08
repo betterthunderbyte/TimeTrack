@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>TimeTrack.Web.Service</name>
+    </assembly>
+    <members>
+        <member name="M:TimeTrack.Web.Service.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            This method gets called by the runtime. Use this method to add services to the container.
+            </summary>
+            <param name="services"></param>
+        </member>
+        <member name="M:TimeTrack.Web.Service.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IWebHostEnvironment,TimeTrack.Web.Service.Models.V1.TimeTrackDbContext)">
+            <summary>
+            This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+            </summary>
+            <param name="app"></param>
+            <param name="env"></param>
+            <param name="dbContext"></param>
+        </member>
+        <member name="P:TimeTrack.Web.Service.Tools.V1.UseCaseResult`1.MessageOutput">
+            <summary>
+            Um Fehler oder ähnliches auszugeben
+            </summary>
+        </member>
+    </members>
+</doc>
