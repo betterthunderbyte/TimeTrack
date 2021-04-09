@@ -48,6 +48,11 @@ namespace TimeTrack.Web.Service.UseCase.V1
                 return UseCaseResult<MemberEntity>.Failure(UseCaseResultType.BadRequest, new ErrorMessage {});
             }
             
+            if (!member.Active)
+            {
+                return UseCaseResult<MemberEntity>.Failure(UseCaseResultType.BadRequest, new ErrorMessage {});
+            }
+
             if (!member.VerifyPassword(password))
             {
                 return UseCaseResult<MemberEntity>.Failure(UseCaseResultType.BadRequest, new ErrorMessage {});
