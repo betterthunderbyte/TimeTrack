@@ -1,4 +1,4 @@
-﻿namespace TimeTrack.Web.Service.Tools.V1
+﻿namespace TimeTrack.Web.Service.Tools
 {
     public class AuthenticationSchemes
     {

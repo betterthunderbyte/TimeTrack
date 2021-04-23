@@ -1,4 +1,4 @@
-﻿namespace TimeTrack.Web.Service.Options
+﻿namespace TimeTrack.Core.Configuration
 {
     public class DatabaseConfiguration
     {

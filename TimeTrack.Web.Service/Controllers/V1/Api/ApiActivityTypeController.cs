@@ -5,12 +5,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
  using Microsoft.AspNetCore.Authorization;
- using TimeTrack.Core.DataTransfer.V1;
+using TimeTrack.Core.DataTransfer;
+using TimeTrack.Core.DataTransfer.V1;
+using TimeTrack.UseCase;
 using TimeTrack.Web.Service.Common;
+using TimeTrack.Web.Service.Tools;
 using TimeTrack.Web.Service.Tools.V1;
- using TimeTrack.Web.Service.UseCase.V1;
 
- namespace TimeTrack.Web.Service.Controllers.V1.Api
+namespace TimeTrack.Web.Service.Controllers.V1.Api
 {
     [Route("v1/api/[controller]")]
     [ApiController]

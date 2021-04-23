@@ -1,6 +1,6 @@
-﻿using TimeTrack.Models.V1;
+﻿using TimeTrack.Core.Model;
 
-namespace TimeTrack.Core.DataTransfer.V1
+namespace TimeTrack.Core.DataTransfer
 {
     public class MemberWithPasswordDataTransfer : MemberDataTransfer
     {

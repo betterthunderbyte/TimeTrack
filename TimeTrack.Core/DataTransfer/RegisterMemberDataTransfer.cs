@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TimeTrack.Core.DataTransfer.V1
+namespace TimeTrack.Core.DataTransfer
 {
     public class RegisterMemberDataTransfer
     {

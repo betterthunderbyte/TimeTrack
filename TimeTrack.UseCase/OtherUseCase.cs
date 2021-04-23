@@ -2,12 +2,10 @@
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TimeTrack.Core;
-using TimeTrack.Models.V1;
+using TimeTrack.Core.DataTransfer;
 using TimeTrack.Core.DataTransfer.V1;
-using TimeTrack.Db;
-using TimeTrack.Web.Service.Tools.V1;
 
-namespace TimeTrack.Web.Service.UseCase.V1
+namespace TimeTrack.UseCase
 {
     public class OtherUseCase
     {

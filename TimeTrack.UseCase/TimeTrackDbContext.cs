@@ -1,8 +1,8 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
-using TimeTrack.Models.V1;
+using TimeTrack.Core.Model;
 
-namespace TimeTrack.Db
+namespace TimeTrack.UseCase
 {
     public class TimeTrackDbContext : DbContext
     {
@@ -85,17 +85,28 @@ namespace TimeTrack.Db
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ProjectEntity>().HasMany<ActivityEntity>(x => x.Activities).WithOne(x => x.Project)
+            base.OnModelCreating(modelBuilder);
+            
+            modelBuilder.Entity<ProjectEntity>()
+                .HasMany<ActivityEntity>(x => x.Activities)
+                .WithOne(x => x.Project)
                 .HasForeignKey(x => x.ProjectFk);
 
-            modelBuilder.Entity<CustomerEntity>().HasMany<ActivityEntity>(x => x.Activities).WithOne(x => x.Customer)
+            modelBuilder.Entity<CustomerEntity>()
+                .HasMany<ActivityEntity>(x => x.Activities)
+                .WithOne(x => x.Customer)
                 .HasForeignKey(x => x.CustomerFk);
 
-            modelBuilder.Entity<MemberEntity>().HasMany<ActivityEntity>(x => x.Activities).WithOne(x => x.Owner)
+            modelBuilder.Entity<MemberEntity>()
+                .HasMany<ActivityEntity>(x => x.Activities)
+                .WithOne(x => x.Owner)
                 .HasForeignKey(x => x.OwnerFk);
 
-            modelBuilder.Entity<ActivityTypeEntity>().HasMany<ActivityEntity>(x => x.Activities)
-                .WithOne(x => x.ActivityType).HasForeignKey(x => x.ActivityTypeFk);
+            
+            modelBuilder.Entity<ActivityTypeEntity>()
+                .HasMany<ActivityEntity>(x => x.Activities)
+                .WithOne(x => x.ActivityType)
+                .HasForeignKey(x => x.ActivityTypeFk);
 
 
         }
@@ -106,7 +117,7 @@ namespace TimeTrack.Db
         public DbSet<ActivityTypeEntity> ActivityTypes { get; set; }
 
         public DbSet<MemberEntity> Members { get; set; }
-        public DbSet<TokenEntity> Tokens { get; set; }
+
 
     }
 }

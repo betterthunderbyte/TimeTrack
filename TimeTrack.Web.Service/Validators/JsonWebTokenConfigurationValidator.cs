@@ -1,8 +1,8 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using Microsoft.Extensions.Options;
+using TimeTrack.Core.Configuration;
 
-namespace TimeTrack.Web.Service.Options
+namespace TimeTrack.Web.Service.Validators
 {
     public class JsonWebTokenConfigurationValidator : IValidateOptions<JsonWebTokenConfiguration>
     {

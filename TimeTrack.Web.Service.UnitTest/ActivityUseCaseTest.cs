@@ -1,8 +1,7 @@
 using System;
 using System.Threading.Tasks;
-using TimeTrack.Db;
-using TimeTrack.Models.V1;
-using TimeTrack.Web.Service.UseCase.V1;
+using TimeTrack.Core.Model;
+using TimeTrack.UseCase;
 using Xunit;
 
 namespace TimeTrack.Web.Service.UnitTest
@@ -31,8 +30,8 @@ namespace TimeTrack.Web.Service.UnitTest
 
                 var r = await activityUseCase.GetSingleAsync(1);
                 
-                Assert.Equal(new DateTimeOffset(2020, 1, 1, 12, 0, 0, new TimeSpan(1, 0, 0)), r.Item.Begin);
-                Assert.Equal(new TimeSpan(2, 0, 0), r.Item.Duration);
+                Assert.Equal(new DateTimeOffset(2020, 1, 1, 12, 0, 0, new TimeSpan(1, 0, 0)), r.Value.Begin);
+                Assert.Equal(new TimeSpan(2, 0, 0), r.Value.Duration);
             }
         }
 
@@ -67,8 +66,8 @@ namespace TimeTrack.Web.Service.UnitTest
                 });
                 
                 var r = await activityUseCase.GetSingleAsync(1);
-                Assert.Equal(new DateTimeOffset(2020, 1, 1, 13, 0, 0, new TimeSpan(1, 0, 0)), r.Item.Begin);
-                Assert.Equal(new TimeSpan(1, 0, 0), r.Item.Duration);
+                Assert.Equal(new DateTimeOffset(2020, 1, 1, 13, 0, 0, new TimeSpan(1, 0, 0)), r.Value.Begin);
+                Assert.Equal(new TimeSpan(1, 0, 0), r.Value.Duration);
             }
         }
      
@@ -104,16 +103,16 @@ namespace TimeTrack.Web.Service.UnitTest
 
 
                 var r1 = await activityUseCase.GetSingleAsync(1);
-                Assert.Equal(new DateTimeOffset(2020, 1, 1, 12, 0, 0, new TimeSpan(1, 0, 0)), r1.Item.Begin);
-                Assert.Equal(new TimeSpan(1, 0, 0), r1.Item.Duration);
+                Assert.Equal(new DateTimeOffset(2020, 1, 1, 12, 0, 0, new TimeSpan(1, 0, 0)), r1.Value.Begin);
+                Assert.Equal(new TimeSpan(1, 0, 0), r1.Value.Duration);
                 
                 var r2 = await activityUseCase.GetSingleAsync(3);
-                Assert.Equal(new DateTimeOffset(2020, 1, 1, 13, 0, 0, new TimeSpan(1, 0, 0)), r2.Item.Begin);
-                Assert.Equal(new TimeSpan(6, 0, 0), r2.Item.Duration);
+                Assert.Equal(new DateTimeOffset(2020, 1, 1, 13, 0, 0, new TimeSpan(1, 0, 0)), r2.Value.Begin);
+                Assert.Equal(new TimeSpan(6, 0, 0), r2.Value.Duration);
                 
                 var r3 = await activityUseCase.GetSingleAsync(2);
-                Assert.Equal(new DateTimeOffset(2020, 1, 1, 19, 0, 0, new TimeSpan(1, 0, 0)), r3.Item.Begin);
-                Assert.Equal(new TimeSpan(1, 0, 0), r3.Item.Duration);
+                Assert.Equal(new DateTimeOffset(2020, 1, 1, 19, 0, 0, new TimeSpan(1, 0, 0)), r3.Value.Begin);
+                Assert.Equal(new TimeSpan(1, 0, 0), r3.Value.Duration);
             }
         }
         
@@ -149,12 +148,12 @@ namespace TimeTrack.Web.Service.UnitTest
 
 
                 var r1 = await activityUseCase.GetSingleAsync(1);
-                Assert.Equal(new DateTimeOffset(2020, 1, 1, 12, 0, 0, new TimeSpan(1, 0, 0)), r1.Item.Begin);
-                Assert.Equal(new TimeSpan(6, 0, 0), r1.Item.Duration);
+                Assert.Equal(new DateTimeOffset(2020, 1, 1, 12, 0, 0, new TimeSpan(1, 0, 0)), r1.Value.Begin);
+                Assert.Equal(new TimeSpan(6, 0, 0), r1.Value.Duration);
 
                 var r3 = await activityUseCase.GetSingleAsync(2);
-                Assert.Equal(new DateTimeOffset(2020, 1, 1, 18, 0, 0, new TimeSpan(1, 0, 0)), r3.Item.Begin);
-                Assert.Equal(new TimeSpan(4, 0, 0), r3.Item.Duration);
+                Assert.Equal(new DateTimeOffset(2020, 1, 1, 18, 0, 0, new TimeSpan(1, 0, 0)), r3.Value.Begin);
+                Assert.Equal(new TimeSpan(4, 0, 0), r3.Value.Duration);
             }
         }
     }

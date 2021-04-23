@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace TimeTrack.Models.V1
+namespace TimeTrack.Core.Model
 {
     public class CustomerEntity
     {
@@ -12,6 +9,6 @@ namespace TimeTrack.Models.V1
         public int Id { get; set; }
         public string Name { get; set; }
 
-        public virtual IEnumerable<ActivityEntity> Activities { get; set; }
+        public List<ActivityEntity> Activities { get; set; }
     }
 }

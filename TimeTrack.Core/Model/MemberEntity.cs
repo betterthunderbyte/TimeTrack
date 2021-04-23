@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Security.Cryptography;
-using System.Threading.Tasks;
+using TimeTrack.Models;
 
-namespace TimeTrack.Models.V1
+namespace TimeTrack.Core.Model
 {
     public class MemberEntity : ITimestamp
     {
@@ -48,7 +47,7 @@ namespace TimeTrack.Models.V1
         public bool RenewPassword { get; set; }
         public MemberRole Role { get; set; }
         
-        public virtual IEnumerable<ActivityEntity> Activities { get; set; }
+        public List<ActivityEntity> Activities { get; set; }
         
         public void SetPassword(string password)
         {

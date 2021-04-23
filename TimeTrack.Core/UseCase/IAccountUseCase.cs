@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using TimeTrack.Models.V1;
+using TimeTrack.Core.Model;
 
 namespace TimeTrack.Core.UseCase
 {

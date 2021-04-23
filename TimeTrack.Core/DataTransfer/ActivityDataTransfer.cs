@@ -1,9 +1,8 @@
-﻿using System;
-using System.Text.Json.Serialization;
-using TimeTrack.Models.V1;
+﻿using TimeTrack.Core.DataTransfer.V1;
+using TimeTrack.Core.Model;
 using TimeTrack.Web.Service.Tools.V1;
 
-namespace TimeTrack.Core.DataTransfer.V1
+namespace TimeTrack.Core.DataTransfer
 {
     public class ActivityDataTransfer : IUseCaseConverter<ActivityEntity>
     {

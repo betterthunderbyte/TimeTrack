@@ -1,7 +1,8 @@
 ﻿using System;
+using TimeTrack.Core.DataTransfer.V1;
 using TimeTrack.Web.Service.Tools.V1;
 
-namespace TimeTrack.Core.DataTransfer.V1
+namespace TimeTrack.Core.DataTransfer
 {
     public class DateTimeDataTransfer : IUseCaseConverter<DateTimeOffset>
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using TimeTrack.Web.Service.Tools.V1;
 
-namespace TimeTrack.Core.DataTransfer.V1
+namespace TimeTrack.Core.DataTransfer
 {
     public class TimeDataTransfer : IUseCaseConverter<TimeSpan>
     {

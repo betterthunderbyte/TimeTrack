@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Threading.Tasks;
+using TimeTrack.Core.DataTransfer;
 using TimeTrack.Core.DataTransfer.V1;
 
 namespace TimeTrack.Client

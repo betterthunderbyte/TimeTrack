@@ -3,10 +3,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using TimeTrack.Core.DataTransfer;
 using TimeTrack.Core.DataTransfer.V1;
+using TimeTrack.UseCase;
 using TimeTrack.Web.Service.Common;
+using TimeTrack.Web.Service.Tools;
 using TimeTrack.Web.Service.Tools.V1;
-using TimeTrack.Web.Service.UseCase.V1;
 
 namespace TimeTrack.Web.Service.Controllers.V1.Web
 {

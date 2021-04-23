@@ -3,10 +3,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using TimeTrack.Core;
+using TimeTrack.Core.Model;
 using TimeTrack.Db;
-using TimeTrack.Models.V1;
+using TimeTrack.UseCase;
 using TimeTrack.Web.Service.Tools.V1;
-using TimeTrack.Web.Service.UseCase.V1;
 
 namespace TimeTrackWebServiceTest
 {
@@ -44,7 +44,7 @@ namespace TimeTrackWebServiceTest
 
 
                 var r = await activityUseCase.GetSingleAsync(1);
-                Assert.AreEqual(r.Item.Begin, new DateTime(2020, 1, 1, 13, 0, 0));
+                Assert.AreEqual(r.Value.Begin, new DateTime(2020, 1, 1, 13, 0, 0));
             }
         }
         
@@ -69,19 +69,19 @@ namespace TimeTrackWebServiceTest
                         OwnerFk = 1
                     });
 
-                    Assert.NotNull(r1.Item);
-                    Assert.Null(r1.Items);
+                    Assert.NotNull(r1.Value);
+                    Assert.Null(r1.Values);
                     Assert.Null(r1.MessageOutput);
                     Assert.True(r1.Successful);
                     Assert.AreEqual(UseCaseResultType.Ok, r1.ResultType);
                     
-                    Assert.Positive(r1.Item.Id);
-                    Assert.AreEqual(1, r1.Item.Id);
-                    Assert.AreEqual(1, r1.Item.ActivityTypeFk);
-                    Assert.AreEqual(1, r1.Item.CustomerFk);
-                    Assert.AreEqual(1, r1.Item.ProjectFk);
-                    Assert.AreEqual(new DateTime(2020, 1, 1, 6, 0, 0), r1.Item.Begin);
-                    Assert.AreEqual(new TimeSpan(0, 1, 0, 0), r1.Item.Duration);
+                    Assert.Positive(r1.Value.Id);
+                    Assert.AreEqual(1, r1.Value.Id);
+                    Assert.AreEqual(1, r1.Value.ActivityTypeFk);
+                    Assert.AreEqual(1, r1.Value.CustomerFk);
+                    Assert.AreEqual(1, r1.Value.ProjectFk);
+                    Assert.AreEqual(new DateTime(2020, 1, 1, 6, 0, 0), r1.Value.Begin);
+                    Assert.AreEqual(new TimeSpan(0, 1, 0, 0), r1.Value.Duration);
                 }
 
                 {
@@ -95,8 +95,8 @@ namespace TimeTrackWebServiceTest
                         OwnerFk = 1
                     });
                 
-                    Assert.Null(r1.Item);
-                    Assert.Null(r1.Items);
+                    Assert.Null(r1.Value);
+                    Assert.Null(r1.Values);
                     Assert.NotNull(r1.MessageOutput);
                     Assert.False(r1.Successful);
                     Assert.AreEqual(UseCaseResultType.NotFound, r1.ResultType);
@@ -113,8 +113,8 @@ namespace TimeTrackWebServiceTest
                         OwnerFk = 1
                     });
                 
-                    Assert.Null(r1.Item);
-                    Assert.Null(r1.Items);
+                    Assert.Null(r1.Value);
+                    Assert.Null(r1.Values);
                     Assert.NotNull(r1.MessageOutput);
                     Assert.False(r1.Successful);
                     Assert.AreEqual(UseCaseResultType.NotFound, r1.ResultType);
@@ -131,8 +131,8 @@ namespace TimeTrackWebServiceTest
                         OwnerFk = 1
                     });
                 
-                    Assert.Null(r1.Item);
-                    Assert.Null(r1.Items);
+                    Assert.Null(r1.Value);
+                    Assert.Null(r1.Values);
                     Assert.NotNull(r1.MessageOutput);
                     Assert.False(r1.Successful);
                     Assert.AreEqual(UseCaseResultType.NotFound, r1.ResultType);
@@ -145,8 +145,8 @@ namespace TimeTrackWebServiceTest
                 {
                     var r1 = await activityUseCase.CreateSingleAsync(new ActivityEntity());
                 
-                    Assert.Null(r1.Item);
-                    Assert.Null(r1.Items);
+                    Assert.Null(r1.Value);
+                    Assert.Null(r1.Values);
                     Assert.NotNull(r1.MessageOutput);
                     Assert.False(r1.Successful);
                     Assert.AreEqual(UseCaseResultType.NotFound, r1.ResultType);
@@ -161,8 +161,8 @@ namespace TimeTrackWebServiceTest
                         OwnerFk = 1
                     });
                 
-                    Assert.Null(r1.Item);
-                    Assert.Null(r1.Items);
+                    Assert.Null(r1.Value);
+                    Assert.Null(r1.Values);
                     Assert.NotNull(r1.MessageOutput);
                     Assert.False(r1.Successful);
                     Assert.AreEqual(UseCaseResultType.NotFound, r1.ResultType);
@@ -177,8 +177,8 @@ namespace TimeTrackWebServiceTest
                         OwnerFk = 1
                     });
                 
-                    Assert.Null(r1.Item);
-                    Assert.Null(r1.Items);
+                    Assert.Null(r1.Value);
+                    Assert.Null(r1.Values);
                     Assert.NotNull(r1.MessageOutput);
                     Assert.False(r1.Successful);
                     Assert.AreEqual(UseCaseResultType.NotFound, r1.ResultType);
@@ -193,8 +193,8 @@ namespace TimeTrackWebServiceTest
                         OwnerFk = 1
                     });
                 
-                    Assert.Null(r1.Item);
-                    Assert.Null(r1.Items);
+                    Assert.Null(r1.Value);
+                    Assert.Null(r1.Values);
                     Assert.NotNull(r1.MessageOutput);
                     Assert.False(r1.Successful);
                     Assert.AreEqual(UseCaseResultType.NotFound, r1.ResultType);
@@ -209,8 +209,8 @@ namespace TimeTrackWebServiceTest
                         ProjectFk = 1
                     });
                 
-                    Assert.Null(r1.Item);
-                    Assert.Null(r1.Items);
+                    Assert.Null(r1.Value);
+                    Assert.Null(r1.Values);
                     Assert.NotNull(r1.MessageOutput);
                     Assert.False(r1.Successful);
                     Assert.AreEqual(UseCaseResultType.NotFound, r1.ResultType);
@@ -238,19 +238,19 @@ namespace TimeTrackWebServiceTest
                     OwnerFk = 1
                 });
 
-                Assert.NotNull(r1.Item);
-                Assert.Null(r1.Items);
+                Assert.NotNull(r1.Value);
+                Assert.Null(r1.Values);
                 Assert.Null(r1.MessageOutput);
                 Assert.True(r1.Successful);
                 Assert.AreEqual(UseCaseResultType.Ok, r1.ResultType);
                     
-                Assert.Positive(r1.Item.Id);
-                Assert.AreEqual(1, r1.Item.Id);
-                Assert.AreEqual(1, r1.Item.ActivityTypeFk);
-                Assert.AreEqual(1, r1.Item.CustomerFk);
-                Assert.AreEqual(1, r1.Item.ProjectFk);
-                Assert.AreEqual(new DateTime(2020, 1, 1, 6, 0, 0), r1.Item.Begin);
-                Assert.AreEqual(new TimeSpan(0, 0, 0, 0), r1.Item.Duration);
+                Assert.Positive(r1.Value.Id);
+                Assert.AreEqual(1, r1.Value.Id);
+                Assert.AreEqual(1, r1.Value.ActivityTypeFk);
+                Assert.AreEqual(1, r1.Value.CustomerFk);
+                Assert.AreEqual(1, r1.Value.ProjectFk);
+                Assert.AreEqual(new DateTime(2020, 1, 1, 6, 0, 0), r1.Value.Begin);
+                Assert.AreEqual(new TimeSpan(0, 0, 0, 0), r1.Value.Duration);
             }
         }
 
@@ -274,19 +274,19 @@ namespace TimeTrackWebServiceTest
                     OwnerFk = 1
                 });
                 
-                Assert.NotNull(r1.Item);
-                Assert.Null(r1.Items);
+                Assert.NotNull(r1.Value);
+                Assert.Null(r1.Values);
                 Assert.Null(r1.MessageOutput);
                 Assert.True(r1.Successful);
                 Assert.AreEqual(UseCaseResultType.Ok, r1.ResultType);
                     
-                Assert.Positive(r1.Item.Id);
-                Assert.AreEqual(1, r1.Item.Id);
-                Assert.AreEqual(1, r1.Item.ActivityTypeFk);
-                Assert.AreEqual(1, r1.Item.CustomerFk);
-                Assert.AreEqual(1, r1.Item.ProjectFk);
-                Assert.AreEqual(new DateTime(2020, 2, 1, 6, 0, 0), r1.Item.Begin);
-                Assert.AreEqual(new TimeSpan(0, 1, 0, 0), r1.Item.Duration);
+                Assert.Positive(r1.Value.Id);
+                Assert.AreEqual(1, r1.Value.Id);
+                Assert.AreEqual(1, r1.Value.ActivityTypeFk);
+                Assert.AreEqual(1, r1.Value.CustomerFk);
+                Assert.AreEqual(1, r1.Value.ProjectFk);
+                Assert.AreEqual(new DateTime(2020, 2, 1, 6, 0, 0), r1.Value.Begin);
+                Assert.AreEqual(new TimeSpan(0, 1, 0, 0), r1.Value.Duration);
             }
         }
 
@@ -308,19 +308,19 @@ namespace TimeTrackWebServiceTest
                     OwnerFk = 1
                 });
                 
-                Assert.NotNull(r1.Item);
-                Assert.Null(r1.Items);
+                Assert.NotNull(r1.Value);
+                Assert.Null(r1.Values);
                 Assert.Null(r1.MessageOutput);
                 Assert.True(r1.Successful);
                 Assert.AreEqual(UseCaseResultType.Ok, r1.ResultType);
                     
-                Assert.Positive(r1.Item.Id);
-                Assert.AreEqual(1, r1.Item.Id);
-                Assert.AreEqual(1, r1.Item.ActivityTypeFk);
-                Assert.AreEqual(1, r1.Item.CustomerFk);
-                Assert.AreEqual(1, r1.Item.ProjectFk);
-                Assert.AreEqual(new DateTime(), r1.Item.Begin);
-                Assert.AreEqual(new TimeSpan(0, 1, 0, 0), r1.Item.Duration);
+                Assert.Positive(r1.Value.Id);
+                Assert.AreEqual(1, r1.Value.Id);
+                Assert.AreEqual(1, r1.Value.ActivityTypeFk);
+                Assert.AreEqual(1, r1.Value.CustomerFk);
+                Assert.AreEqual(1, r1.Value.ProjectFk);
+                Assert.AreEqual(new DateTime(), r1.Value.Begin);
+                Assert.AreEqual(new TimeSpan(0, 1, 0, 0), r1.Value.Duration);
 
             }
         }
@@ -375,12 +375,12 @@ namespace TimeTrackWebServiceTest
                 {
                     var r1 = await activityUseCase.GetAllAsync();
                     
-                    Assert.Null(r1.Item);
-                    Assert.NotNull(r1.Items);
+                    Assert.Null(r1.Value);
+                    Assert.NotNull(r1.Values);
                     Assert.Null(r1.MessageOutput);
                     Assert.True(r1.Successful);
                     Assert.AreEqual(UseCaseResultType.Ok, r1.ResultType);
-                    Assert.AreEqual(3, r1.Items.Count());
+                    Assert.AreEqual(3, r1.Values.Count());
                     
                 }
                 
@@ -388,26 +388,26 @@ namespace TimeTrackWebServiceTest
                 {
                     var r1 = await activityUseCase.GetSingleAsync(1);
                     
-                    Assert.NotNull(r1.Item);
-                    Assert.Null(r1.Items);
+                    Assert.NotNull(r1.Value);
+                    Assert.Null(r1.Values);
                     Assert.Null(r1.MessageOutput);
                     Assert.True(r1.Successful);
                     Assert.AreEqual(UseCaseResultType.Ok, r1.ResultType);
                     
-                    Assert.Positive(r1.Item.Id);
-                    Assert.AreEqual(1, r1.Item.Id);
-                    Assert.AreEqual(1, r1.Item.ActivityTypeFk);
-                    Assert.AreEqual(1, r1.Item.CustomerFk);
-                    Assert.AreEqual(1, r1.Item.ProjectFk);
-                    Assert.AreEqual(new DateTime(2020, 1, 1, 6, 0, 0), r1.Item.Begin);
-                    Assert.AreEqual(new TimeSpan(0, 1, 0, 0), r1.Item.Duration);
+                    Assert.Positive(r1.Value.Id);
+                    Assert.AreEqual(1, r1.Value.Id);
+                    Assert.AreEqual(1, r1.Value.ActivityTypeFk);
+                    Assert.AreEqual(1, r1.Value.CustomerFk);
+                    Assert.AreEqual(1, r1.Value.ProjectFk);
+                    Assert.AreEqual(new DateTime(2020, 1, 1, 6, 0, 0), r1.Value.Begin);
+                    Assert.AreEqual(new TimeSpan(0, 1, 0, 0), r1.Value.Duration);
                 }
 
                 {
                     var r1 = await activityUseCase.GetSingleAsync(0);
                     
-                    Assert.Null(r1.Item);
-                    Assert.Null(r1.Items);
+                    Assert.Null(r1.Value);
+                    Assert.Null(r1.Values);
                     Assert.NotNull(r1.MessageOutput);
                     Assert.False(r1.Successful);
                     Assert.AreEqual(UseCaseResultType.NotFound, r1.ResultType);
@@ -472,19 +472,19 @@ namespace TimeTrackWebServiceTest
                         OwnerFk = 1
                     });
                     
-                    Assert.NotNull(r1.Item);
-                    Assert.Null(r1.Items);
+                    Assert.NotNull(r1.Value);
+                    Assert.Null(r1.Values);
                     Assert.Null(r1.MessageOutput);
                     Assert.True(r1.Successful);
                     Assert.AreEqual(UseCaseResultType.Ok, r1.ResultType);
                     
-                    Assert.Positive(r1.Item.Id);
-                    Assert.AreEqual(1, r1.Item.Id);
-                    Assert.AreEqual(1, r1.Item.ActivityTypeFk);
-                    Assert.AreEqual(1, r1.Item.CustomerFk);
-                    Assert.AreEqual(1, r1.Item.ProjectFk);
-                    Assert.AreEqual(new DateTime(2020, 1, 2, 6, 0, 0), r1.Item.Begin);
-                    Assert.AreEqual(new TimeSpan(0, 1, 0, 0), r1.Item.Duration);
+                    Assert.Positive(r1.Value.Id);
+                    Assert.AreEqual(1, r1.Value.Id);
+                    Assert.AreEqual(1, r1.Value.ActivityTypeFk);
+                    Assert.AreEqual(1, r1.Value.CustomerFk);
+                    Assert.AreEqual(1, r1.Value.ProjectFk);
+                    Assert.AreEqual(new DateTime(2020, 1, 2, 6, 0, 0), r1.Value.Begin);
+                    Assert.AreEqual(new TimeSpan(0, 1, 0, 0), r1.Value.Duration);
                 }
                 
                 {
@@ -498,19 +498,19 @@ namespace TimeTrackWebServiceTest
                         OwnerFk = 1
                     });
                     
-                    Assert.NotNull(r1.Item);
-                    Assert.Null(r1.Items);
+                    Assert.NotNull(r1.Value);
+                    Assert.Null(r1.Values);
                     Assert.Null(r1.MessageOutput);
                     Assert.True(r1.Successful);
                     Assert.AreEqual(UseCaseResultType.Ok, r1.ResultType);
                     
-                    Assert.Positive(r1.Item.Id);
-                    Assert.AreEqual(1, r1.Item.Id);
-                    Assert.AreEqual(1, r1.Item.ActivityTypeFk);
-                    Assert.AreEqual(1, r1.Item.CustomerFk);
-                    Assert.AreEqual(1, r1.Item.ProjectFk);
-                    Assert.AreEqual(new DateTimeOffset(2020, 1, 2, 6, 0, 0, TimeSpan.Zero), r1.Item.Begin);
-                    Assert.AreEqual(new TimeSpan(0, 1, 0, 0), r1.Item.Duration);
+                    Assert.Positive(r1.Value.Id);
+                    Assert.AreEqual(1, r1.Value.Id);
+                    Assert.AreEqual(1, r1.Value.ActivityTypeFk);
+                    Assert.AreEqual(1, r1.Value.CustomerFk);
+                    Assert.AreEqual(1, r1.Value.ProjectFk);
+                    Assert.AreEqual(new DateTimeOffset(2020, 1, 2, 6, 0, 0, TimeSpan.Zero), r1.Value.Begin);
+                    Assert.AreEqual(new TimeSpan(0, 1, 0, 0), r1.Value.Duration);
 
                 }
                 
@@ -525,8 +525,8 @@ namespace TimeTrackWebServiceTest
                         OwnerFk = 1
                     });
                     
-                    Assert.Null(r1.Item);
-                    Assert.Null(r1.Items);
+                    Assert.Null(r1.Value);
+                    Assert.Null(r1.Values);
                     Assert.NotNull(r1.MessageOutput);
                     Assert.False(r1.Successful);
                     Assert.AreEqual(UseCaseResultType.NotFound, r1.ResultType);
@@ -543,8 +543,8 @@ namespace TimeTrackWebServiceTest
                         OwnerFk = 1
                     });
                     
-                    Assert.Null(r1.Item);
-                    Assert.Null(r1.Items);
+                    Assert.Null(r1.Value);
+                    Assert.Null(r1.Values);
                     Assert.NotNull(r1.MessageOutput);
                     Assert.False(r1.Successful);
                     Assert.AreEqual(UseCaseResultType.NotFound, r1.ResultType);
@@ -561,8 +561,8 @@ namespace TimeTrackWebServiceTest
                         OwnerFk = 1
                     });
                     
-                    Assert.Null(r1.Item);
-                    Assert.Null(r1.Items);
+                    Assert.Null(r1.Value);
+                    Assert.Null(r1.Values);
                     Assert.NotNull(r1.MessageOutput);
                     Assert.False(r1.Successful);
                     Assert.AreEqual(UseCaseResultType.NotFound, r1.ResultType);
@@ -579,8 +579,8 @@ namespace TimeTrackWebServiceTest
                         OwnerFk = 2
                     });
                     
-                    Assert.Null(r1.Item);
-                    Assert.Null(r1.Items);
+                    Assert.Null(r1.Value);
+                    Assert.Null(r1.Values);
                     Assert.NotNull(r1.MessageOutput);
                     Assert.False(r1.Successful);
                     Assert.AreEqual(UseCaseResultType.NotFound, r1.ResultType);
@@ -636,8 +636,8 @@ namespace TimeTrackWebServiceTest
 
                 {
                     var r1 = await activityUseCase.DeleteSingleAsync(0);
-                    Assert.Null(r1.Item);
-                    Assert.Null(r1.Items);
+                    Assert.Null(r1.Value);
+                    Assert.Null(r1.Values);
                     Assert.NotNull(r1.MessageOutput);
                     Assert.False(r1.Successful);
                     Assert.AreEqual(UseCaseResultType.NotFound, r1.ResultType);
@@ -645,19 +645,19 @@ namespace TimeTrackWebServiceTest
                 
                 {
                     var r1 = await activityUseCase.DeleteSingleAsync(1);
-                    Assert.NotNull(r1.Item);
-                    Assert.Null(r1.Items);
+                    Assert.NotNull(r1.Value);
+                    Assert.Null(r1.Values);
                     Assert.Null(r1.MessageOutput);
                     Assert.True(r1.Successful);
                     Assert.AreEqual(UseCaseResultType.Ok, r1.ResultType);
                     
-                    Assert.Positive(r1.Item.Id);
-                    Assert.AreEqual(1, r1.Item.Id);
-                    Assert.AreEqual(1, r1.Item.ActivityTypeFk);
-                    Assert.AreEqual(1, r1.Item.CustomerFk);
-                    Assert.AreEqual(1, r1.Item.ProjectFk);
-                    Assert.AreEqual(new DateTime(2020, 1, 1, 6, 0, 0), r1.Item.Begin);
-                    Assert.AreEqual(new TimeSpan(0, 1, 0, 0), r1.Item.Duration);
+                    Assert.Positive(r1.Value.Id);
+                    Assert.AreEqual(1, r1.Value.Id);
+                    Assert.AreEqual(1, r1.Value.ActivityTypeFk);
+                    Assert.AreEqual(1, r1.Value.CustomerFk);
+                    Assert.AreEqual(1, r1.Value.ProjectFk);
+                    Assert.AreEqual(new DateTime(2020, 1, 1, 6, 0, 0), r1.Value.Begin);
+                    Assert.AreEqual(new TimeSpan(0, 1, 0, 0), r1.Value.Duration);
                 }
             }
         }

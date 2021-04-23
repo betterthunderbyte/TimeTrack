@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using TimeTrack.Core.DataTransfer.V1;
 
-namespace TimeTrack.Core.DataTransfer.V1
+namespace TimeTrack.Core.DataTransfer
 {
     /// <summary>
     /// 

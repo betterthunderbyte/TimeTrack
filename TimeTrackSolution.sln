@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeTrack.Core", "TimeTrack
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeTrack.Core.UnitTest", "TimeTrack.Core.UnitTest\TimeTrack.Core.UnitTest.csproj", "{F9600445-0C95-4A9E-8A11-8CCC35FA4BB3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeTrack.Db", "TimeTrack.Db\TimeTrack.Db.csproj", "{6901625E-00C5-457C-B88B-2F13D220BB61}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeTrack.UseCase", "TimeTrack.UseCase\TimeTrack.UseCase.csproj", "{6901625E-00C5-457C-B88B-2F13D220BB61}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

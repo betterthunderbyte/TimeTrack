@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace TimeTrack.Models.V1
+namespace TimeTrack.Core.Model
 {
     public class ActivityEntity
     {
@@ -17,15 +13,15 @@ namespace TimeTrack.Models.V1
         public TimeSpan Duration { get; set; }
         
         public int ActivityTypeFk { get; set; }
-        public virtual ActivityTypeEntity ActivityType { get; set; }
+        public ActivityTypeEntity ActivityType { get; set; }
         
         public int ProjectFk { get; set; }
-        public virtual ProjectEntity Project { get; set; }
+        public ProjectEntity Project { get; set; }
 
         public int CustomerFk { get; set; }
-        public virtual CustomerEntity Customer { get; set; }
+        public CustomerEntity Customer { get; set; }
         
         public int OwnerFk { get; set; }
-        public virtual MemberEntity Owner { get; set; }
+        public MemberEntity Owner { get; set; }
     }
 }

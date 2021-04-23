@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using TimeTrack.Models.V1;
+using TimeTrack.Core.Model;
 using TimeTrack.Web.Service.Tools.V1;
 
-namespace TimeTrack.Core.DataTransfer.V1
+namespace TimeTrack.Core.DataTransfer
 {
     public class MemberDataTransfer : IUseCaseConverter<MemberEntity>
     {

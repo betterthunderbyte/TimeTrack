@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace TimeTrack.Models.V1
+namespace TimeTrack.Core.Model
 {
     public class ActivityTypeEntity
     {
@@ -13,7 +10,7 @@ namespace TimeTrack.Models.V1
         public string Title { get; set; }
         public string Description { get; set; }
 
-        public virtual IEnumerable<ActivityEntity> Activities { get; set; }
+        public List<ActivityEntity> Activities { get; set; }
 
     }
 }

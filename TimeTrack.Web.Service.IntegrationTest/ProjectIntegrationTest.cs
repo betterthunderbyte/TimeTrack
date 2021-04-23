@@ -5,11 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using TimeTrack.Client;
+using TimeTrack.Core.DataTransfer;
 using TimeTrack.Core.DataTransfer.V1;
-using TimeTrack.Db;
-using TimeTrack.Models.V1;
-using TimeTrack.Web.Service;
-using TimeTrack.Web.Service.UseCase.V1;
+
+using TimeTrack.UseCase;
 using Xunit;
 
 namespace TimeTrack.Web.Service.IntegrationTest
@@ -27,7 +26,7 @@ namespace TimeTrack.Web.Service.IntegrationTest
             );
 
             var db = server.Services.GetService(typeof(TimeTrackDbContext)) as TimeTrackDbContext;
-
+            
             db.Database.EnsureDeleted();
             db.Database.EnsureCreated();
             db.Setup();

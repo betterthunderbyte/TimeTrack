@@ -32,12 +32,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Options" />
     <Folder Include="wwwroot" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\TimeTrack.Core\TimeTrack.Core.csproj" />
-    <ProjectReference Include="..\TimeTrack.Db\TimeTrack.Db.csproj" />
+    <ProjectReference Include="..\TimeTrack.UseCase\TimeTrack.UseCase.csproj" />
   </ItemGroup>
 
 

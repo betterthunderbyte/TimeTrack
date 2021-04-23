@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+using TimeTrack.Models;
 
-
-namespace TimeTrack.Models.V1
+namespace TimeTrack.Core.Model
 {
     public class TokenEntity : ITimestamp
     {
@@ -22,6 +19,6 @@ namespace TimeTrack.Models.V1
         public DateTimeOffset ExpirationTime { get; set; }
 
         public int MemberFk { get; set; }
-        public virtual MemberEntity Member { get; set; }
+        public MemberEntity Member { get; set; }
     }
 }

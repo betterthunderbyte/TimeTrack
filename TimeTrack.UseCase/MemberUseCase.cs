@@ -1,12 +1,9 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TimeTrack.Core;
-using TimeTrack.Db;
-using TimeTrack.Models.V1;
-using TimeTrack.Web.Service.Tools.V1;
+using TimeTrack.Core.Model;
 
-namespace TimeTrack.Web.Service.UseCase.V1
+namespace TimeTrack.UseCase
 {
     public class MemberUseCase
     {
@@ -45,6 +42,31 @@ namespace TimeTrack.Web.Service.UseCase.V1
                     Message="Das Mitglied ist fehlerhaft!"
                 });
             }
+
+            if (string.IsNullOrWhiteSpace(member.Mail))
+            {
+                return UseCaseResult<MemberEntity>.Failure(UseCaseResultType.BadRequest, new
+                {
+                    Message="Die E-Mail fehlt!"
+                });
+            }
+            
+            if (member.Mail.Length > 320)
+            {
+                return UseCaseResult<MemberEntity>.Failure(UseCaseResultType.BadRequest, new
+                {
+                    Message="Die E-Mail ist zu lang!"
+                });
+            }
+
+            if (await _context.Members.AnyAsync(x => x.Mail == member.Mail))
+            {
+                return UseCaseResult<MemberEntity>.Failure(UseCaseResultType.BadRequest, new
+                {
+                    Message="Die E-Mail wird schon verwendet!"
+                });
+            }
+            
             
             await _context.Members.AddAsync(member);
             await _context.SaveChangesAsync();

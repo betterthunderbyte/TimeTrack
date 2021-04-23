@@ -1,20 +1,16 @@
 ﻿using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using TimeTrack.Core;
-using TimeTrack.Models.V1;
+using TimeTrack.Core.Configuration;
+using TimeTrack.Core.DataTransfer;
 using TimeTrack.Core.DataTransfer.V1;
-using TimeTrack.Db;
-using TimeTrack.Web.Service.Options;
-using TimeTrack.Web.Service.Tools.V1;
+using TimeTrack.Core.Model;
 
-namespace TimeTrack.Web.Service.UseCase.V1
+namespace TimeTrack.UseCase
 {
     public class AccountUseCase
     {
@@ -61,7 +57,7 @@ namespace TimeTrack.Web.Service.UseCase.V1
             return UseCaseResult<MemberEntity>.Success(member);
         }
 
-        public async Task<UseCaseResult<NewTokenDataTransfer>> LoginAsync(LoginDataTransfer loginDataTransfer)
+        public async Task<UseCaseResult<MemberEntity>> LoginAsync(LoginDataTransfer loginDataTransfer)
         {
             var member = await _context.Members.SingleOrDefaultAsync(
                 x => x.Mail == loginDataTransfer.Mail
@@ -69,7 +65,7 @@ namespace TimeTrack.Web.Service.UseCase.V1
             
             if (member == null)
             {
-                return UseCaseResult<NewTokenDataTransfer>.Failure(
+                return UseCaseResult<MemberEntity>.Failure(
                     UseCaseResultType.BadRequest,     
                     new { Message = "Die E-Mail oder das Passwort ist falsch!"}
                 );
@@ -77,55 +73,13 @@ namespace TimeTrack.Web.Service.UseCase.V1
 
             if (!member.VerifyPassword(loginDataTransfer.Password))
             {
-                return UseCaseResult<NewTokenDataTransfer>.Failure(
+                return UseCaseResult<MemberEntity>.Failure(
                     UseCaseResultType.BadRequest,     
                     new { Message = "Die E-Mail oder das Passwort ist falsch!"}
                 );
             }
-            
-            string role = "none";
-            
-            switch (member.Role)
-            {
-                case MemberEntity.MemberRole.Admin:
-                    role = "admin";
-                    break;
-                case MemberEntity.MemberRole.Moderator:
-                    role = "moderator";
-                    break;
-                case MemberEntity.MemberRole.User:
-                    role = "user";
-                    break;
-                default:
-                    break;
-            }
-            
-            var securityKey = new SymmetricSecurityKey(
-                Encoding.ASCII.GetBytes(_configuration.Secret)
-            );
-            var credentials = new SigningCredentials(
-                securityKey, 
-                SecurityAlgorithms.HmacSha256
-            );
-            var token = new JwtSecurityToken(
-                _configuration.Issuer, 
-                _configuration.Audience, 
-                new Claim[]
-                {
-                    new Claim(ClaimTypes.NameIdentifier, member.Id.ToString()),
-                    new Claim(ClaimTypes.Role, role),
-                    new Claim(ClaimTypes.Surname, member.Surname),
-                    new Claim(ClaimTypes.GivenName, member.GivenName),
-                    new Claim(ClaimTypes.Email, member.Mail),
-                }, 
-                null, 
-                DateTime.Now.AddSeconds(_configuration.AccessTokenExpiration), 
-                credentials);
-            
-            return UseCaseResult<NewTokenDataTransfer>.Success(new NewTokenDataTransfer()
-            {
-                Token = new JwtSecurityTokenHandler().WriteToken(token)
-            });
+
+            return UseCaseResult<MemberEntity>.Success(member);
         }
         
     }

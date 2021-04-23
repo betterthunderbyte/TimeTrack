@@ -17,11 +17,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using TimeTrack.Db;
-using TimeTrack.Models.V1;
-using TimeTrack.Web.Service.Options;
+using TimeTrack.Core.Configuration;
+using TimeTrack.UseCase;
+using TimeTrack.Web.Service.Tools;
 using TimeTrack.Web.Service.Tools.V1;
-using TimeTrack.Web.Service.UseCase.V1;
+using TimeTrack.Web.Service.Validators;
 
 namespace TimeTrack.Web.Service
 {
@@ -40,42 +40,25 @@ namespace TimeTrack.Web.Service
         /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<TimeTrackDbContext>(x =>
+            {
+                x.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
+            });
+            
             services.AddSingleton<JsonWebTokenConfigurationValidator>();
             services.AddSingleton<DatabaseConfigurationValidator>();
             
             services.Configure<JsonWebTokenConfiguration>(Configuration.GetSection("JwtOptions"));
 
             var jwtOptions = Configuration.GetSection("JwtOptions").Get<JsonWebTokenConfiguration>();
-            
-            var databaseDriver = Configuration.GetSection("Database").GetValue<string>("Driver");
-            var databaseName = Configuration.GetSection("Database").GetValue<string>("Name");
 
-            if (string.IsNullOrWhiteSpace(databaseName))
-            {
-                databaseName = "v1timetrack.db";
-            }
-            
-            switch (databaseDriver)
-            {
-                case "sqlite:memory":
-                    services.AddDbContext<TimeTrackDbContext>(x => {
-                        x.UseSqlite("DataSource=:memory:;Cache=Private");
-                    });
-                    break;
-                default:
-                    services.AddDbContext<TimeTrackDbContext>(x => {
-                        x.UseSqlite($"Data Source={databaseName}");
-                    });
-                    break;
-            }
-
-            services.AddSingleton<ProjectUseCase>();
-            services.AddSingleton<CustomerUseCase>();
-            services.AddSingleton<ActivityTypeUseCase>();
-            services.AddSingleton<MemberUseCase>();
-            services.AddSingleton<ActivityUseCase>();
-            services.AddSingleton<OtherUseCase>();
-            services.AddSingleton<AccountUseCase>();
+            services.AddScoped<ProjectUseCase>();
+            services.AddScoped<CustomerUseCase>();
+            services.AddScoped<ActivityTypeUseCase>();
+            services.AddScoped<MemberUseCase>();
+            services.AddScoped<ActivityUseCase>();
+            services.AddScoped<OtherUseCase>();
+            services.AddScoped<AccountUseCase>();
 
             services.AddSwaggerGen(c =>
             {

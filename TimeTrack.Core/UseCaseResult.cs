@@ -16,13 +16,13 @@ namespace TimeTrack.Core
         Accepted
     }
 
-    public class UseCaseResult<T> where T : class
+    public class UseCaseResult<T>
     {
         public bool Successful { get; set; }
 
-        public T Item => Items.First();
+        public T Value => Values.First();
 
-        public IEnumerable<T> Items { get; set; }
+        public IEnumerable<T> Values { get; set; }
 
         public UseCaseResultType ResultType { get; set; }
 
@@ -35,9 +35,9 @@ namespace TimeTrack.Core
         {
             IEnumerable<B> r = null;
 
-            if(Items != null)
+            if(Values != null)
             {
-                r = Items.ToList().ConvertAll(x =>
+                r = Values.ToList().ConvertAll(x =>
                 {
                     var v = new B();
                     v.From(x);
@@ -47,7 +47,7 @@ namespace TimeTrack.Core
 
             return new UseCaseResult<B>()
             {
-                Items = r,
+                Values = r,
                 MessageOutput = MessageOutput,
                 Successful = Successful,
                 ResultType = ResultType
@@ -57,7 +57,7 @@ namespace TimeTrack.Core
         public static UseCaseResult<T> Success(T result)
         {
             return new UseCaseResult<T>() {
-                Items = new []{result},
+                Values = new []{result},
                 Successful = true,
                 ResultType = UseCaseResultType.Ok
             };
@@ -67,16 +67,16 @@ namespace TimeTrack.Core
         {
             return new UseCaseResult<T>()
             {
-                Items = result,
+                Values = result,
                 Successful = true,
                 ResultType = UseCaseResultType.Ok
             };
         }
 
-        public static UseCaseResult<T> Failure(UseCaseResultType resultType, object message)
+        public static UseCaseResult<T> Failure(UseCaseResultType resultType = UseCaseResultType.BadRequest, object message = null)
         {
             return new UseCaseResult<T>() {
-                Items = null,
+                Values = null,
                 ResultType = resultType,
                 MessageOutput = message
             };

@@ -5,9 +5,10 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using TimeTrack.Models.V1;
+using TimeTrack.Core.Model;
+using TimeTrack.UseCase;
+using TimeTrack.Web.Service.Tools;
 using TimeTrack.Web.Service.Tools.V1;
-using TimeTrack.Web.Service.UseCase.V1;
 
 namespace TimeTrack.Web.Service.Controllers.V1.Web
 {
@@ -55,7 +56,7 @@ namespace TimeTrack.Web.Service.Controllers.V1.Web
             if (r.Successful)
             {
                 var role = "none";
-                switch (r.Item.Role)
+                switch (r.Value.Role)
                 {
                     case MemberEntity.MemberRole.Admin:
                         role = "Admin";
@@ -72,8 +73,8 @@ namespace TimeTrack.Web.Service.Controllers.V1.Web
 
                 var claims = new List<Claim>()
                 {
-                    new Claim(ClaimTypes.Email, r.Item.Mail),
-                    new Claim(ClaimTypes.NameIdentifier, r.Item.Id.ToString()),
+                    new Claim(ClaimTypes.Email, r.Value.Mail),
+                    new Claim(ClaimTypes.NameIdentifier, r.Value.Id.ToString()),
                     new Claim(ClaimTypes.Role, role),
                 };
 

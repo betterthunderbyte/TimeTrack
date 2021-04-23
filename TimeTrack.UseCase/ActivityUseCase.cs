@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TimeTrack.Core;
+using TimeTrack.Core.DataTransfer;
 using TimeTrack.Core.DataTransfer.V1;
-using TimeTrack.Db;
-using TimeTrack.Models.V1;
-using TimeTrack.Web.Service.Tools.V1;
+using TimeTrack.Core.Model;
 
-namespace TimeTrack.Web.Service.UseCase.V1
+namespace TimeTrack.UseCase
 {
     public class ActivityUseCase
     {

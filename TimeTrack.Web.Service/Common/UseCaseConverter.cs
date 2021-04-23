@@ -12,7 +12,7 @@ namespace TimeTrack.Web.Service.Common
             switch (useCaseResult.ResultType)
             {
                 case UseCaseResultType.Ok:
-                    return new OkObjectResult(useCaseResult.Items.First());
+                    return new OkObjectResult(useCaseResult.Values.First());
                 case UseCaseResultType.NoContent:
                     return new NoContentResult();
                 case UseCaseResultType.Accepted:
@@ -31,7 +31,7 @@ namespace TimeTrack.Web.Service.Common
             switch (useCaseResult.ResultType)
             {
                 case UseCaseResultType.Ok:
-                    return new OkObjectResult(useCaseResult.Items);
+                    return new OkObjectResult(useCaseResult.Values);
                 case UseCaseResultType.NoContent:
                     return new NoContentResult();
                 case UseCaseResultType.Accepted:

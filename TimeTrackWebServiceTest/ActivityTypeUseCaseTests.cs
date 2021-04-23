@@ -3,10 +3,10 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using TimeTrack.Core;
+using TimeTrack.Core.Model;
 using TimeTrack.Db;
-using TimeTrack.Models.V1;
+using TimeTrack.UseCase;
 using TimeTrack.Web.Service.Tools.V1;
-using TimeTrack.Web.Service.UseCase.V1;
 
 namespace TimeTrackWebServiceTest
 {
@@ -26,14 +26,14 @@ namespace TimeTrackWebServiceTest
                     Title = "Tätigkeit1", 
                     Description = "Tätigkeitbeschreibung"
                 });
-                Assert.NotNull(r1.Item);
-                Assert.Null(r1.Items);
+                Assert.NotNull(r1.Value);
+                Assert.Null(r1.Values);
                 Assert.Null(r1.MessageOutput);
                 Assert.True(r1.Successful);
                 Assert.AreEqual(UseCaseResultType.Ok, r1.ResultType);
-                Assert.Positive(r1.Item.Id);
-                Assert.AreEqual(2, r1.Item.Id);
-                Assert.AreEqual("Tätigkeit1", r1.Item.Title);
+                Assert.Positive(r1.Value.Id);
+                Assert.AreEqual(2, r1.Value.Id);
+                Assert.AreEqual("Tätigkeit1", r1.Value.Title);
             }
         }
         
@@ -51,22 +51,22 @@ namespace TimeTrackWebServiceTest
                     Title = "Tätigkeit1", 
                     Description = "Tätigkeitbeschreibung"
                 });
-                Assert.NotNull(r1.Item);
-                Assert.Null(r1.Items);
+                Assert.NotNull(r1.Value);
+                Assert.Null(r1.Values);
                 Assert.Null(r1.MessageOutput);
                 Assert.True(r1.Successful);
                 Assert.AreEqual(UseCaseResultType.Ok, r1.ResultType);
-                Assert.Positive(r1.Item.Id);
-                Assert.AreEqual(2, r1.Item.Id);
-                Assert.AreEqual("Tätigkeit1", r1.Item.Title);
+                Assert.Positive(r1.Value.Id);
+                Assert.AreEqual(2, r1.Value.Id);
+                Assert.AreEqual("Tätigkeit1", r1.Value.Title);
                 
                 var r2 = await useCase.CreateSingleAsync(new ActivityTypeEntity()
                 {
                     Title = "Tätigkeit1", 
                     Description = "Tätigkeitbeschreibung"
                 });
-                Assert.Null(r2.Item);
-                Assert.Null(r2.Items);
+                Assert.Null(r2.Value);
+                Assert.Null(r2.Values);
                 Assert.NotNull(r2.MessageOutput);
                 Assert.False(r2.Successful);
                 Assert.AreEqual(UseCaseResultType.Conflict, r2.ResultType);
@@ -88,14 +88,14 @@ namespace TimeTrackWebServiceTest
                     Title = "Tätigkeit2",
                     Description = "Tätigkeitbeschreibung"
                 });
-                Assert.NotNull(r1.Item);
-                Assert.Null(r1.Items);
+                Assert.NotNull(r1.Value);
+                Assert.Null(r1.Values);
                 Assert.Null(r1.MessageOutput);
                 Assert.True(r1.Successful);
                 Assert.AreEqual(UseCaseResultType.Ok, r1.ResultType);
-                Assert.Positive(r1.Item.Id);
-                Assert.AreEqual(2, r1.Item.Id);
-                Assert.AreEqual("Tätigkeit2", r1.Item.Title);
+                Assert.Positive(r1.Value.Id);
+                Assert.AreEqual(2, r1.Value.Id);
+                Assert.AreEqual("Tätigkeit2", r1.Value.Title);
             }
         }
 
@@ -113,8 +113,8 @@ namespace TimeTrackWebServiceTest
                     Title = "", 
                     Description = ""
                 });
-                Assert.Null(r1.Item);
-                Assert.Null(r1.Items);
+                Assert.Null(r1.Value);
+                Assert.Null(r1.Values);
                 Assert.NotNull(r1.MessageOutput);
                 Assert.False(r1.Successful);
                 Assert.AreEqual(UseCaseResultType.BadRequest, r1.ResultType);
@@ -134,8 +134,8 @@ namespace TimeTrackWebServiceTest
                 {
                     Title = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut la"
                 });
-                Assert.Null(r1.Item);
-                Assert.Null(r1.Items);
+                Assert.Null(r1.Value);
+                Assert.Null(r1.Values);
                 Assert.NotNull(r1.MessageOutput);
                 Assert.False(r1.Successful);
                 Assert.AreEqual(UseCaseResultType.BadRequest, r1.ResultType);
@@ -155,8 +155,8 @@ namespace TimeTrackWebServiceTest
                 {
                     Title = "      "
                 });
-                Assert.Null(r1.Item);
-                Assert.Null(r1.Items);
+                Assert.Null(r1.Value);
+                Assert.Null(r1.Values);
                 Assert.NotNull(r1.MessageOutput);
                 Assert.False(r1.Successful);
                 Assert.AreEqual(UseCaseResultType.BadRequest, r1.ResultType);
@@ -176,14 +176,14 @@ namespace TimeTrackWebServiceTest
                 {
                     Title = " Tätigkeit3 "
                 });
-                Assert.NotNull(r1.Item);
-                Assert.Null(r1.Items);
+                Assert.NotNull(r1.Value);
+                Assert.Null(r1.Values);
                 Assert.Null(r1.MessageOutput);
                 Assert.True(r1.Successful);
                 Assert.AreEqual(UseCaseResultType.Ok, r1.ResultType);
-                Assert.Positive(r1.Item.Id);
-                Assert.AreEqual(2, r1.Item.Id);
-                Assert.AreEqual("Tätigkeit3", r1.Item.Title);
+                Assert.Positive(r1.Value.Id);
+                Assert.AreEqual(2, r1.Value.Id);
+                Assert.AreEqual("Tätigkeit3", r1.Value.Title);
             }
         }
 
@@ -200,8 +200,8 @@ namespace TimeTrackWebServiceTest
                     Title = "Tätigkeit8",
                     Description = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea taki"
                 });
-                Assert.Null(r1.Item);
-                Assert.Null(r1.Items);
+                Assert.Null(r1.Value);
+                Assert.Null(r1.Values);
                 Assert.NotNull(r1.MessageOutput);
                 Assert.False(r1.Successful);
                 Assert.AreEqual(UseCaseResultType.BadRequest, r1.ResultType);
@@ -217,8 +217,8 @@ namespace TimeTrackWebServiceTest
                 var useCase = new ActivityTypeUseCase(context);
 
                 var r1 = await useCase.CreateSingleAsync(new ActivityTypeEntity());
-                Assert.Null(r1.Item);
-                Assert.Null(r1.Items);
+                Assert.Null(r1.Value);
+                Assert.Null(r1.Values);
                 Assert.NotNull(r1.MessageOutput);
                 Assert.False(r1.Successful);
                 Assert.AreEqual(UseCaseResultType.BadRequest, r1.ResultType);
@@ -244,13 +244,13 @@ namespace TimeTrackWebServiceTest
                 });
                 
                 var r1 = await useCase.GetAllAsync();
-                Assert.Null(r1.Item);
-                Assert.NotNull(r1.Items);
+                Assert.Null(r1.Value);
+                Assert.NotNull(r1.Values);
                 Assert.Null(r1.MessageOutput);
                 Assert.True(r1.Successful);
                 Assert.AreEqual(UseCaseResultType.Ok, r1.ResultType);
-                Assert.Positive(r1.Items.Count());
-                Assert.AreEqual(3, r1.Items.Count());
+                Assert.Positive(r1.Values.Count());
+                Assert.AreEqual(3, r1.Values.Count());
             }
         }
         
@@ -273,13 +273,13 @@ namespace TimeTrackWebServiceTest
                 });
                 
                 var r1 = await useCase.GetSingleAsync(2);
-                Assert.NotNull(r1.Item);
-                Assert.Null(r1.Items);
+                Assert.NotNull(r1.Value);
+                Assert.Null(r1.Values);
                 Assert.Null(r1.MessageOutput);
                 Assert.True(r1.Successful);
                 Assert.AreEqual(UseCaseResultType.Ok, r1.ResultType);
-                Assert.AreEqual(2, r1.Item.Id);
-                Assert.AreEqual("Tätigkeit1", r1.Item.Title);
+                Assert.AreEqual(2, r1.Value.Id);
+                Assert.AreEqual("Tätigkeit1", r1.Value.Title);
             }
         }
         
@@ -302,8 +302,8 @@ namespace TimeTrackWebServiceTest
                 });
                 
                 var r1 = await useCase.GetSingleAsync(-1);
-                Assert.Null(r1.Item);
-                Assert.Null(r1.Items);
+                Assert.Null(r1.Value);
+                Assert.Null(r1.Values);
                 Assert.NotNull(r1.MessageOutput);
                 Assert.False(r1.Successful);
                 Assert.AreEqual(UseCaseResultType.NotFound, r1.ResultType);
@@ -332,14 +332,14 @@ namespace TimeTrackWebServiceTest
                 {
                     Title = "Tätigkeit3"
                 });
-                Assert.NotNull(r1.Item);
-                Assert.Null(r1.Items);
+                Assert.NotNull(r1.Value);
+                Assert.Null(r1.Values);
                 Assert.Null(r1.MessageOutput);
                 Assert.True(r1.Successful);
                 Assert.AreEqual(UseCaseResultType.Ok, r1.ResultType);
-                Assert.AreEqual(2, r1.Item.Id);
-                Assert.AreEqual("Tätigkeit3", r1.Item.Title);
-                Assert.AreEqual(null, r1.Item.Description);
+                Assert.AreEqual(2, r1.Value.Id);
+                Assert.AreEqual("Tätigkeit3", r1.Value.Title);
+                Assert.AreEqual(null, r1.Value.Description);
             }
         }
         
@@ -365,8 +365,8 @@ namespace TimeTrackWebServiceTest
                 {
                     Title = "Tätigkeit2"
                 });
-                Assert.Null(r1.Item);
-                Assert.Null(r1.Items);
+                Assert.Null(r1.Value);
+                Assert.Null(r1.Values);
                 Assert.NotNull(r1.MessageOutput);
                 Assert.False(r1.Successful);
                 Assert.AreEqual(UseCaseResultType.Conflict, r1.ResultType);
@@ -392,13 +392,13 @@ namespace TimeTrackWebServiceTest
                 });
                 
                 var r1 = await useCase.UpdateSingleAsync(3, new ActivityTypeEntity() { Title = "         "});
-                Assert.NotNull(r1.Item);
-                Assert.Null(r1.Items);
+                Assert.NotNull(r1.Value);
+                Assert.Null(r1.Values);
                 Assert.Null(r1.MessageOutput);
                 Assert.True(r1.Successful);
                 Assert.AreEqual(UseCaseResultType.Ok, r1.ResultType);
                 
-                Assert.AreEqual("Tätigkeit2", r1.Item.Title);
+                Assert.AreEqual("Tätigkeit2", r1.Value.Title);
             }
         }
 
@@ -424,8 +424,8 @@ namespace TimeTrackWebServiceTest
                 {
                     Title = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut la"
                 });
-                Assert.Null(r1.Item);
-                Assert.Null(r1.Items);
+                Assert.Null(r1.Value);
+                Assert.Null(r1.Values);
                 Assert.NotNull(r1.MessageOutput);
                 Assert.False(r1.Successful);
                 Assert.AreEqual(UseCaseResultType.BadRequest, r1.ResultType);
@@ -453,13 +453,13 @@ namespace TimeTrackWebServiceTest
                 {
                     Title = " Tätigkeit5 "
                 });
-                Assert.NotNull(r1.Item);
-                Assert.Null(r1.Items);
+                Assert.NotNull(r1.Value);
+                Assert.Null(r1.Values);
                 Assert.Null(r1.MessageOutput);
                 Assert.True(r1.Successful);
                 Assert.AreEqual(UseCaseResultType.Ok, r1.ResultType);
-                Assert.AreEqual(3, r1.Item.Id);
-                Assert.AreEqual("Tätigkeit5", r1.Item.Title);
+                Assert.AreEqual(3, r1.Value.Id);
+                Assert.AreEqual("Tätigkeit5", r1.Value.Title);
                 
             }
         }
@@ -488,13 +488,13 @@ namespace TimeTrackWebServiceTest
                     {
                         Id = 22, Title = "Tätigkeit7"
                     });
-                    Assert.NotNull(r1.Item);
-                    Assert.Null(r1.Items);
+                    Assert.NotNull(r1.Value);
+                    Assert.Null(r1.Values);
                     Assert.Null(r1.MessageOutput);
                     Assert.True(r1.Successful);
                     Assert.AreEqual(UseCaseResultType.Ok, r1.ResultType);
-                    Assert.AreEqual(3, r1.Item.Id);
-                    Assert.AreEqual("Tätigkeit7", r1.Item.Title);
+                    Assert.AreEqual(3, r1.Value.Id);
+                    Assert.AreEqual("Tätigkeit7", r1.Value.Title);
                 }
 
             }
@@ -524,14 +524,14 @@ namespace TimeTrackWebServiceTest
                 {
                     Title = ""
                 });
-                Assert.NotNull(r1.Item);
-                Assert.Null(r1.Items);
+                Assert.NotNull(r1.Value);
+                Assert.Null(r1.Values);
                 Assert.Null(r1.MessageOutput);
                 Assert.True(r1.Successful);
                 Assert.AreEqual(UseCaseResultType.Ok, r1.ResultType);
-                Assert.AreEqual(3, r1.Item.Id);
-                Assert.AreEqual("Tätigkeit2", r1.Item.Title);
-                Assert.AreEqual("Tätigkeit2 Beschreibung", r1.Item.Description);
+                Assert.AreEqual(3, r1.Value.Id);
+                Assert.AreEqual("Tätigkeit2", r1.Value.Title);
+                Assert.AreEqual("Tätigkeit2 Beschreibung", r1.Value.Description);
             }
         }
         
@@ -557,14 +557,14 @@ namespace TimeTrackWebServiceTest
                 });
                 
                 var r1 = await useCase.UpdateSingleAsync(3, new ActivityTypeEntity() { });
-                Assert.NotNull(r1.Item);
-                Assert.Null(r1.Items);
+                Assert.NotNull(r1.Value);
+                Assert.Null(r1.Values);
                 Assert.Null(r1.MessageOutput);
                 Assert.True(r1.Successful);
                 Assert.AreEqual(UseCaseResultType.Ok, r1.ResultType);
-                Assert.AreEqual(3, r1.Item.Id);
-                Assert.AreEqual("Tätigkeit2", r1.Item.Title);
-                Assert.AreEqual("Tätigkeit2 Beschreibung", r1.Item.Description);
+                Assert.AreEqual(3, r1.Value.Id);
+                Assert.AreEqual("Tätigkeit2", r1.Value.Title);
+                Assert.AreEqual("Tätigkeit2 Beschreibung", r1.Value.Description);
             }
         }
 
@@ -587,13 +587,13 @@ namespace TimeTrackWebServiceTest
                 });
                 
                 var r1 = await useCase.DeleteSingleAsync(2);
-                Assert.NotNull(r1.Item);
-                Assert.Null(r1.Items);
+                Assert.NotNull(r1.Value);
+                Assert.Null(r1.Values);
                 Assert.Null(r1.MessageOutput);
                 Assert.True(r1.Successful);
                 Assert.AreEqual(UseCaseResultType.Ok, r1.ResultType);
-                Assert.AreEqual(2, r1.Item.Id);
-                Assert.AreEqual("Tätigkeit1", r1.Item.Title);
+                Assert.AreEqual(2, r1.Value.Id);
+                Assert.AreEqual("Tätigkeit1", r1.Value.Title);
 
             }
         }
@@ -608,8 +608,8 @@ namespace TimeTrackWebServiceTest
                 var useCase = new ActivityTypeUseCase(context);
                 
                 var r1 = await useCase.DeleteSingleAsync(5000);
-                Assert.Null(r1.Item);
-                Assert.Null(r1.Items);
+                Assert.Null(r1.Value);
+                Assert.Null(r1.Values);
                 Assert.NotNull(r1.MessageOutput);
                 Assert.False(r1.Successful);
                 Assert.AreEqual(UseCaseResultType.NotFound, r1.ResultType);
@@ -626,8 +626,8 @@ namespace TimeTrackWebServiceTest
                 var useCase = new ActivityTypeUseCase(context);
                 
                 var r4 = await useCase.DeleteSingleAsync(1);
-                Assert.Null(r4.Item);
-                Assert.Null(r4.Items);
+                Assert.Null(r4.Value);
+                Assert.Null(r4.Values);
                 Assert.NotNull(r4.MessageOutput);
                 Assert.False(r4.Successful);
                 Assert.AreEqual(UseCaseResultType.Conflict, r4.ResultType);
