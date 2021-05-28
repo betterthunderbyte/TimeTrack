@@ -33,6 +33,23 @@ namespace TimeTrack.UseCase
             return UseCaseResult<MemberEntity>.Success(r);
         }
 
+        public async Task<UseCaseResult<MemberEntity>> SetPassword(int id, string password)
+        {
+            var member = await _context.Members.SingleOrDefaultAsync(x => x.Id == id);
+
+            if (member == null)
+            {
+                return UseCaseResult<MemberEntity>.Failure(UseCaseResultType.NotFound, new
+                {
+                    Message="Das Mitglied existiert nicht."
+                });
+            }
+            
+            member.SetPassword(password);
+            await _context.SaveChangesAsync();
+            return UseCaseResult<MemberEntity>.Success(member);
+        }
+
         public async Task<UseCaseResult<MemberEntity>> PutSingleAsync(MemberEntity member)
         {
             if (member == null)
@@ -76,13 +93,14 @@ namespace TimeTrack.UseCase
 
         public async Task<UseCaseResult<MemberEntity>> DeleteSingleAsync(int id)
         { 
-            var r = await _context.Members.SingleOrDefaultAsync(x => x.Id == id);
+            var r = await _context.Members.Include(x => x.Activities).SingleOrDefaultAsync(x => x.Id == id);
 
             if (r == null)
             {
                 return UseCaseResult<MemberEntity>.Failure(UseCaseResultType.NotFound, new { ID = id });
             }
-
+            
+            _context.Activities.RemoveRange(r.Activities);
             _context.Members.Remove(r);
             await _context.SaveChangesAsync();
 

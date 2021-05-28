@@ -127,13 +127,21 @@ namespace TimeTrack.UseCase
                 });
             }
 
-            var r = await _context.Projects.SingleOrDefaultAsync(x => x.Id == id);
+            var r = await _context.Projects.Include(x => x.Activities).SingleOrDefaultAsync(x => x.Id == id);
 
             if (r == null)
             {
                 return UseCaseResult<ProjectEntity>.Failure(UseCaseResultType.NotFound, new
                 {
                     Message="Der Datensatz existiert nicht!"
+                });
+            }
+
+            if (r.Activities != null && r.Activities.Count > 0)
+            {
+                return UseCaseResult<ProjectEntity>.Failure(UseCaseResultType.BadRequest, new
+                {
+                    Message="Der Datensatz kann nicht gelöscht werden, weil der noch verwendet wird."
                 });
             }
             

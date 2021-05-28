@@ -1,3 +1,9 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -7,23 +13,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
-using Swashbuckle.AspNetCore.SwaggerGen;
+using Microsoft.OpenApi.Models;
 using TimeTrack.Core.Configuration;
+using TimeTrack.Core.Configuration.Validators;
 using TimeTrack.UseCase;
-using TimeTrack.Web.Service.Tools;
-using TimeTrack.Web.Service.Tools.V1;
-using TimeTrack.Web.Service.Validators;
+using TimeTrack.Web.Api.Common;
 
-namespace TimeTrack.Web.Service
+namespace TimeTrack.Web.Api
 {
     public class Startup
     {
@@ -34,10 +31,7 @@ namespace TimeTrack.Web.Service
 
         public IConfiguration Configuration { get; }
 
-        /// <summary>
-        /// This method gets called by the runtime. Use this method to add services to the container.
-        /// </summary>
-        /// <param name="services"></param>
+        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<TimeTrackDbContext>(x =>
@@ -46,12 +40,11 @@ namespace TimeTrack.Web.Service
             });
             
             services.AddSingleton<JsonWebTokenConfigurationValidator>();
-            services.AddSingleton<DatabaseConfigurationValidator>();
-            
+
             services.Configure<JsonWebTokenConfiguration>(Configuration.GetSection("JwtOptions"));
 
             var jwtOptions = Configuration.GetSection("JwtOptions").Get<JsonWebTokenConfiguration>();
-
+            
             services.AddScoped<ProjectUseCase>();
             services.AddScoped<CustomerUseCase>();
             services.AddScoped<ActivityTypeUseCase>();
@@ -59,7 +52,26 @@ namespace TimeTrack.Web.Service
             services.AddScoped<ActivityUseCase>();
             services.AddScoped<OtherUseCase>();
             services.AddScoped<AccountUseCase>();
-
+            
+            services.AddAuthentication(AuthenticationSchemes.Bearer) 
+                .AddJwtBearer(AuthenticationSchemes.Bearer, options =>
+                {
+                    options.RequireHttpsMetadata = true;
+                    options.SaveToken = true;
+                    options.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidateIssuer = true,
+                        ValidIssuer = jwtOptions.Issuer,
+                        ValidAudience = jwtOptions.Audience,
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtOptions.Secret)),
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ClockSkew = TimeSpan.FromMinutes(1) 
+                    };
+                });
+            
+            services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.ResolveConflictingActions(apiDescription =>
@@ -80,7 +92,7 @@ namespace TimeTrack.Web.Service
                         Name = "MIT"
                     }
                 });
-                var xmlFile = $"TimeTrack.Web.Service.xml";
+                var xmlFile = $"TimeTrack.Web.Api.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
@@ -105,87 +117,39 @@ namespace TimeTrack.Web.Service
                         new string[] {}
                     }
                 });
+                c.EnableAnnotations();
             });
-
-            services.AddAuthentication(AuthenticationSchemes.Cookie) 
-                .AddCookie(AuthenticationSchemes.Cookie, options =>
-                {
-                    options.AccessDeniedPath = "/account/denied";
-                    options.LoginPath = "/account/login";
-                    options.LogoutPath = "/account/logout";
-                }).AddJwtBearer(AuthenticationSchemes.Bearer, options =>
-                {
-                    options.RequireHttpsMetadata = true;
-                    options.SaveToken = true;
-                    options.TokenValidationParameters = new TokenValidationParameters()
-                    {
-                        ValidateIssuer = true,
-                        ValidIssuer = jwtOptions.Issuer,
-                        ValidAudience = jwtOptions.Audience,
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtOptions.Secret)),
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ClockSkew = TimeSpan.FromMinutes(1) 
-                    };
-                });
-            
-            services.AddControllers();
-            services.AddControllersWithViews().AddRazorRuntimeCompilation();
         }
 
-        /// <summary>
-        /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        /// </summary>
-        /// <param name="app"></param>
-        /// <param name="env"></param>
-        /// <param name="dbContext"></param>
-        public void Configure(ILogger<Startup> logger, IApplicationBuilder app, IWebHostEnvironment env, TimeTrackDbContext dbContext)
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, TimeTrackDbContext dbContext)
         {
             dbContext.Setup();
-
-            if (Configuration.GetValue<bool>("EnableCustomLogging"))
-            {
-                app.Use(async (context, next) =>
-                {
-                    logger.LogInformation(
-                        $"Path: {context.Request.Path.Value} Method: {context.Request.HttpContext.Request.Method}"+
-                        $" Protocol: {context.Request.Protocol} IP: {context.Request.HttpContext.Connection.RemoteIpAddress}"
-                    );
-                
-                    await next.Invoke();
-                });
-            }
             
-  
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                
+                app.UseSwagger(c =>
+                {
+                    c.RouteTemplate = "docs/{documentName}/docs.json";
+                });
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/docs/v1/docs.json", "TimeTrack API V1");
+                });
             }
-            else
-            {
-            }
-
-            app.UseSwagger(c =>
-            {
-                c.RouteTemplate = "docs/{documentName}/docs.json";
-            });
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/docs/v1/docs.json", "TimeTrack API V1");
-            });
 
             app.UseHttpsRedirection();
-            app.UseStaticFiles("/assets");
+
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
-
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                //endpoints.MapControllerRoute("default", "{controller=Activity}/{action=Index}");
             });
         }
     }

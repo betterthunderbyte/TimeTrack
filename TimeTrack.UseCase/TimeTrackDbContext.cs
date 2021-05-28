@@ -101,14 +101,11 @@ namespace TimeTrack.UseCase
                 .HasMany<ActivityEntity>(x => x.Activities)
                 .WithOne(x => x.Owner)
                 .HasForeignKey(x => x.OwnerFk);
-
             
             modelBuilder.Entity<ActivityTypeEntity>()
                 .HasMany<ActivityEntity>(x => x.Activities)
                 .WithOne(x => x.ActivityType)
                 .HasForeignKey(x => x.ActivityTypeFk);
-
-
         }
 
         public DbSet<ActivityEntity> Activities { get; set; }

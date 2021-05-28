@@ -94,11 +94,11 @@ namespace TimeTrack.Web.Service
                         }
                         else
                         {
-                            CreateCertificate();
-                            options.UseHttps(_certificate2, x =>
+                            //CreateCertificate();
+                            /*options.UseHttps(_certificate2, x =>
                             {
                             
-                            });
+                            });*/
                         }
                     });
                 });

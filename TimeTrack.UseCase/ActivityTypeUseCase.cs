@@ -143,13 +143,21 @@ namespace TimeTrack.UseCase
                 });
             }
             
-            var r = await _timeTrackDbContext.ActivityTypes.SingleOrDefaultAsync(x => x.Id == id);
+            var r = await _timeTrackDbContext.ActivityTypes.Include(x => x.Activities).SingleOrDefaultAsync(x => x.Id == id);
 
             if (r == null)
             {
                 return UseCaseResult<ActivityTypeEntity>.Failure(UseCaseResultType.NotFound, new
                 {
                     Message="Der Datensatz konnte nicht gefunden werden!", Id = id
+                });
+            }
+
+            if (r.Activities != null && r.Activities.Count > 0)
+            {
+                return UseCaseResult<ActivityTypeEntity>.Failure(UseCaseResultType.BadRequest, new
+                {
+                    Message="Der Datensatz kann nicht gelöscht werden, weil der noch verwendet wird.", Id = id
                 });
             }
             

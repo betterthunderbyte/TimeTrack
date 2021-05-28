@@ -92,10 +92,15 @@ namespace TimeTrack.UseCase
                 });
             }
             
-            var r = await _timeTrackDbContext.Customers.SingleOrDefaultAsync(x => x.Id == id);
+            var r = await _timeTrackDbContext.Customers.Include(x => x.Activities).SingleOrDefaultAsync(x => x.Id == id);
             if(r == null)
             {
                 return UseCaseResult<CustomerEntity>.Failure(UseCaseResultType.NotFound, null);
+            }
+
+            if (r.Activities != null && r.Activities.Count > 0)
+            {
+                return UseCaseResult<CustomerEntity>.Failure(UseCaseResultType.BadRequest, null);
             }
 
             _timeTrackDbContext.Customers.Remove(r);
