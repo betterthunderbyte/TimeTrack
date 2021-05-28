@@ -23,20 +23,19 @@ namespace TimeTrack.UseCase
             _configuration = configuration.Value;
         }
 
-        public async Task<UseCaseResult<MemberEntity>> ValidateLoginAsync(string mail, string password)
+        public async Task<UseCaseResult<MemberEntity>> ValidateLoginAsync(LoginDataTransfer loginDataTransfer)
         {
-            if (string.IsNullOrWhiteSpace(mail))
+            var validationResult = loginDataTransfer.IsValid();
+            if (!validationResult)
             {
-                return UseCaseResult<MemberEntity>.Failure(UseCaseResultType.BadRequest, new ErrorMessage {Message="E-Mail nicht vorhanden!"});
-            }
-            
-            if (string.IsNullOrWhiteSpace(password))
-            {
-                return UseCaseResult<MemberEntity>.Failure(UseCaseResultType.BadRequest, new ErrorMessage {Message="Passwort nicht vorhanden!"});
+                return UseCaseResult<MemberEntity>.Failure(UseCaseResultType.BadRequest, new ErrorMessage()
+                {
+                    Message = validationResult.Message
+                });
             }
             
             var member = await _context.Members.SingleOrDefaultAsync(
-                x => x.Mail == mail
+                x => x.Mail == loginDataTransfer.Mail
             );
 
             if (member == null)
@@ -49,7 +48,7 @@ namespace TimeTrack.UseCase
                 return UseCaseResult<MemberEntity>.Failure(UseCaseResultType.BadRequest, new ErrorMessage {});
             }
 
-            if (!member.VerifyPassword(password))
+            if (!member.VerifyPassword(loginDataTransfer.Password))
             {
                 return UseCaseResult<MemberEntity>.Failure(UseCaseResultType.BadRequest, new ErrorMessage {});
             }

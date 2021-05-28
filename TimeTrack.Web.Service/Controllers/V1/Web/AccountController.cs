@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using TimeTrack.Core.DataTransfer;
 using TimeTrack.Core.Model;
 using TimeTrack.UseCase;
 using TimeTrack.Web.Service.Tools;
@@ -49,9 +50,9 @@ namespace TimeTrack.Web.Service.Controllers.V1.Web
         }
         
         [HttpPost()]
-        public async Task<IActionResult> Login(string mail, string password)
+        public async Task<IActionResult> Login([FromBody] LoginDataTransfer loginDataTransfer)
         {
-            var r = await _accountUseCase.ValidateLoginAsync(mail, password);
+            var r = await _accountUseCase.ValidateLoginAsync(loginDataTransfer);
             
             if (r.Successful)
             {
