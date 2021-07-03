@@ -4,10 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using TimeTrack.Core;
 using TimeTrack.Core.DataTransfer;
 using TimeTrack.Core.DataTransfer.V1;
+using TimeTrack.Core.UseCase;
 
 namespace TimeTrack.UseCase
 {
-    public class OtherUseCase
+    public class OtherUseCase : IOtherUseCase
     {
         private TimeTrackDbContext _context;
         

@@ -2,10 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using TimeTrack.Core;
 using TimeTrack.Core.Model;
+using TimeTrack.Core.UseCase;
 
 namespace TimeTrack.UseCase
 {
-    public class CustomerUseCase
+    public class CustomerUseCase : ICustomerUseCase
     {
         TimeTrackDbContext _timeTrackDbContext;
 

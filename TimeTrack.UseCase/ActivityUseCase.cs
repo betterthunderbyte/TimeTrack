@@ -6,10 +6,11 @@ using TimeTrack.Core;
 using TimeTrack.Core.DataTransfer;
 using TimeTrack.Core.DataTransfer.V1;
 using TimeTrack.Core.Model;
+using TimeTrack.Core.UseCase;
 
 namespace TimeTrack.UseCase
 {
-    public class ActivityUseCase
+    public class ActivityUseCase : IActivityUseCase
     {
         TimeTrackDbContext _timeTrackDbContext;
 

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
  using Microsoft.AspNetCore.Authorization;
 using Swashbuckle.AspNetCore.Annotations;
 using TimeTrack.Core.DataTransfer;
-
+using TimeTrack.Core.UseCase;
 using TimeTrack.UseCase;
 using TimeTrack.Web.Api.Common;
 
@@ -17,9 +17,9 @@ namespace TimeTrack.Web.Api.Controllers
     [ApiController, Route("v1/api/[controller]")]
     public class ActivityTypeController : ControllerBase
     {
-        private ActivityTypeUseCase _activityTypeUseCase;
+        private IActivityTypeUseCase _activityTypeUseCase;
         
-        public ActivityTypeController(ActivityTypeUseCase activityTypeUseCase)
+        public ActivityTypeController(IActivityTypeUseCase activityTypeUseCase)
         {
             _activityTypeUseCase = activityTypeUseCase;
         }

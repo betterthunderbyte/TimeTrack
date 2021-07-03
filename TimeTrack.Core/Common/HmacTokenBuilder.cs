@@ -61,13 +61,13 @@ namespace TimeTrack.Core.Common
             {
                 var contentAsBytes = Encoding.UTF8.GetBytes(contentAsJson);
                 var hash = hmac.ComputeHash(contentAsBytes);
-
-                WebEncoders.
                 
                 StringBuilder builder = new StringBuilder();
-                builder.Append(contentAsBytes);
+                builder.Append(WebEncoders.Base64UrlEncode(contentAsBytes));
                 builder.Append(".");
-                builder.Append(hash);
+                builder.Append(WebEncoders.Base64UrlEncode(hash));
+
+                return builder.ToString();
             }
         }
     }

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using TimeTrack.Core.DataTransfer;
 using TimeTrack.Core.DataTransfer.V1;
+using TimeTrack.Core.UseCase;
 using TimeTrack.UseCase;
 using TimeTrack.Web.Api.Common;
 using TimeTrack.Web.Service.Tools;
@@ -17,9 +18,9 @@ namespace TimeTrack.Web.Api.Controllers
     [ApiController, Route("v1/api/[controller]")]
     public class CustomerController : ControllerBase
     {
-        CustomerUseCase _customerUseCase;
+        ICustomerUseCase _customerUseCase;
 
-        public CustomerController(CustomerUseCase customerUseCase)
+        public CustomerController(ICustomerUseCase customerUseCase)
         {
             _customerUseCase = customerUseCase;
         }

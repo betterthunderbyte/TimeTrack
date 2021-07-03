@@ -4,10 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using TimeTrack.Core;
 using TimeTrack.Core.Model;
+using TimeTrack.Core.UseCase;
 
 namespace TimeTrack.UseCase
 {
-    public class ProjectUseCase
+    public class ProjectUseCase : IProjectUseCase
     {
         private TimeTrackDbContext _context;
         private ILogger<ProjectUseCase> _logger;

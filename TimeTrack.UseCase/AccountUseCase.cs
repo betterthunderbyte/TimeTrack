@@ -9,10 +9,11 @@ using TimeTrack.Core.Configuration;
 using TimeTrack.Core.DataTransfer;
 using TimeTrack.Core.DataTransfer.V1;
 using TimeTrack.Core.Model;
+using TimeTrack.Core.UseCase;
 
 namespace TimeTrack.UseCase
 {
-    public class AccountUseCase
+    public class AccountUseCase : IAccountUseCase
     {
         TimeTrackDbContext _context;
         private JsonWebTokenConfiguration _configuration;

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using TimeTrack.Core.DataTransfer;
 using TimeTrack.Core.DataTransfer.V1;
+using TimeTrack.Core.UseCase;
 using TimeTrack.UseCase;
 using TimeTrack.Web.Api.Common;
 using TimeTrack.Web.Service.Tools;
@@ -19,9 +20,9 @@ namespace TimeTrack.Web.Api.Controllers
     [ApiController, Route("v1/api/[controller]")]
     public class ActivityController : ControllerBase
     {
-        private ActivityUseCase _activityUseCase;
+        private IActivityUseCase _activityUseCase;
 
-        public ActivityController(ActivityUseCase activityUseCase)
+        public ActivityController(IActivityUseCase activityUseCase)
         {
             _activityUseCase = activityUseCase;
         }

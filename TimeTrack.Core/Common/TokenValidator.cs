@@ -15,10 +15,9 @@
         public abstract bool GetValue(string key, out bool value);
         public abstract bool GetValue(string key, out float value);
         public abstract bool GetValue(string key, out double value);
-        
-        public bool Validate()
-        {
-            return false;
-        }
+
+        public abstract TokenValidator ValidateToken(string token);
+
+        public abstract bool IsValid();
     }
 }

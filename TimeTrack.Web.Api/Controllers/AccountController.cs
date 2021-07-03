@@ -15,6 +15,7 @@ using TimeTrack.Core.Configuration;
 using TimeTrack.Core.DataTransfer;
 using TimeTrack.Core.DataTransfer.V1;
 using TimeTrack.Core.Model;
+using TimeTrack.Core.UseCase;
 using TimeTrack.UseCase;
 using TimeTrack.Web.Api.Common;
 
@@ -23,10 +24,10 @@ namespace TimeTrack.Web.Service.Controllers.V1.Api
     [ApiController, Route("v1/api/[controller]")]
     public class AccountController : ControllerBase
     {
-        private AccountUseCase _accountUseCase;
+        private IAccountUseCase _accountUseCase;
         private IOptions<JsonWebTokenConfiguration> _configuration;
 
-        public AccountController(AccountUseCase accountUseCase, IOptions<JsonWebTokenConfiguration> configuration)
+        public AccountController(IAccountUseCase accountUseCase, IOptions<JsonWebTokenConfiguration> configuration)
         {
             _accountUseCase = accountUseCase;
             _configuration = configuration;

@@ -17,6 +17,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using TimeTrack.Core.Configuration;
 using TimeTrack.Core.Configuration.Validators;
+using TimeTrack.Core.UseCase;
 using TimeTrack.UseCase;
 using TimeTrack.Web.Api.Common;
 
@@ -45,13 +46,13 @@ namespace TimeTrack.Web.Api
 
             var jwtOptions = Configuration.GetSection("JwtOptions").Get<JsonWebTokenConfiguration>();
             
-            services.AddScoped<ProjectUseCase>();
-            services.AddScoped<CustomerUseCase>();
-            services.AddScoped<ActivityTypeUseCase>();
-            services.AddScoped<MemberUseCase>();
-            services.AddScoped<ActivityUseCase>();
-            services.AddScoped<OtherUseCase>();
-            services.AddScoped<AccountUseCase>();
+            services.AddScoped<Core.UseCase.IProjectUseCase, ProjectUseCase>();
+            services.AddScoped<ICustomerUseCase, CustomerUseCase>();
+            services.AddScoped<IActivityTypeUseCase, ActivityTypeUseCase>();
+            services.AddScoped<Core.UseCase.IMemberUseCase, MemberUseCase>();
+            services.AddScoped<IActivityUseCase, ActivityUseCase>();
+            services.AddScoped<Core.UseCase.IOtherUseCase, OtherUseCase>();
+            services.AddScoped<IAccountUseCase, AccountUseCase>();
             
             services.AddAuthentication(AuthenticationSchemes.Bearer) 
                 .AddJwtBearer(AuthenticationSchemes.Bearer, options =>

@@ -3,10 +3,11 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TimeTrack.Core;
 using TimeTrack.Core.Model;
+using TimeTrack.Core.UseCase;
 
 namespace TimeTrack.UseCase
 {
-    public class ActivityTypeUseCase
+    public class ActivityTypeUseCase : IActivityTypeUseCase
     {
         TimeTrackDbContext _timeTrackDbContext;
 

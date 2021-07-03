@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 using TimeTrack.Core.DataTransfer;
 using TimeTrack.Core.DataTransfer.V1;
+using TimeTrack.Core.UseCase;
 using TimeTrack.UseCase;
 using TimeTrack.Web.Api.Common;
 using TimeTrack.Web.Service.Tools;
@@ -18,10 +19,10 @@ namespace TimeTrack.Web.Api.Controllers
     [ApiController, Route("v1/api/[controller]")]
     public class ProjectController : ControllerBase
     {
-        ProjectUseCase _projectUseCase;
+        IProjectUseCase _projectUseCase;
         private ILogger<ProjectController> _logger;
 
-        public ProjectController(ProjectUseCase projectUseCase, ILogger<ProjectController> logger)
+        public ProjectController(IProjectUseCase projectUseCase, ILogger<ProjectController> logger)
         {
             _projectUseCase = projectUseCase;
             _logger = logger;
