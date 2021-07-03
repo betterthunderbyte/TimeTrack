@@ -10,10 +10,10 @@ namespace TimeTrack.UseCase
 {
     public class ProjectUseCase : IProjectUseCase
     {
-        private TimeTrackDbContext _context;
+        private IDbContext _context;
         private ILogger<ProjectUseCase> _logger;
         
-        public ProjectUseCase(TimeTrackDbContext context)
+        public ProjectUseCase(IDbContext context)
         {
             _context = context;
         }

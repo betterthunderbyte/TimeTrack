@@ -8,9 +8,9 @@ namespace TimeTrack.UseCase
 {
     public class MemberUseCase : IMemberUseCase
     {
-        private TimeTrackDbContext _context;
+        private IDbContext _context;
         
-        public MemberUseCase(TimeTrackDbContext context)
+        public MemberUseCase(IDbContext context)
         {
             _context = context;
         }

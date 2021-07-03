@@ -12,9 +12,9 @@ namespace TimeTrack.UseCase
 {
     public class ActivityUseCase : IActivityUseCase
     {
-        TimeTrackDbContext _timeTrackDbContext;
+        IDbContext _timeTrackDbContext;
 
-        public ActivityUseCase(TimeTrackDbContext timeTrackDbContext)
+        public ActivityUseCase(IDbContext timeTrackDbContext)
         {
             _timeTrackDbContext = timeTrackDbContext;
         }

@@ -15,10 +15,10 @@ namespace TimeTrack.UseCase
 {
     public class AccountUseCase : IAccountUseCase
     {
-        TimeTrackDbContext _context;
+        IDbContext _context;
         private JsonWebTokenConfiguration _configuration;
         
-        public AccountUseCase(TimeTrackDbContext timeTrackDbContext, IOptions<JsonWebTokenConfiguration> configuration)
+        public AccountUseCase(IDbContext timeTrackDbContext, IOptions<JsonWebTokenConfiguration> configuration)
         {
             _context = timeTrackDbContext;
             _configuration = configuration.Value;

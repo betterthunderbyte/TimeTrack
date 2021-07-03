@@ -40,18 +40,20 @@ namespace TimeTrack.Web.Api
                 x.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
             });
             
+            services.AddScoped<IDbContext>(provider => provider.GetService<TimeTrackDbContext>());
+            
             services.AddSingleton<JsonWebTokenConfigurationValidator>();
 
             services.Configure<JsonWebTokenConfiguration>(Configuration.GetSection("JwtOptions"));
 
             var jwtOptions = Configuration.GetSection("JwtOptions").Get<JsonWebTokenConfiguration>();
             
-            services.AddScoped<Core.UseCase.IProjectUseCase, ProjectUseCase>();
+            services.AddScoped<IProjectUseCase, ProjectUseCase>();
             services.AddScoped<ICustomerUseCase, CustomerUseCase>();
             services.AddScoped<IActivityTypeUseCase, ActivityTypeUseCase>();
-            services.AddScoped<Core.UseCase.IMemberUseCase, MemberUseCase>();
+            services.AddScoped<IMemberUseCase, MemberUseCase>();
             services.AddScoped<IActivityUseCase, ActivityUseCase>();
-            services.AddScoped<Core.UseCase.IOtherUseCase, OtherUseCase>();
+            services.AddScoped<IOtherUseCase, OtherUseCase>();
             services.AddScoped<IAccountUseCase, AccountUseCase>();
             
             services.AddAuthentication(AuthenticationSchemes.Bearer) 

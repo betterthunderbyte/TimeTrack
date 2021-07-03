@@ -4,7 +4,7 @@ using TimeTrack.Core.Model;
 
 namespace TimeTrack.UseCase
 {
-    public class TimeTrackDbContext : DbContext
+    public class TimeTrackDbContext : DbContext, IDbContext
     {
         public TimeTrackDbContext() { }
 
