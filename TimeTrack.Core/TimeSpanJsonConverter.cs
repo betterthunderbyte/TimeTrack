@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace TimeTrack.Web.Service.Tools.V1
+namespace TimeTrack.Core
 {
     public class TimeSpanJsonConverter : JsonConverter<TimeSpan>
     {

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace TimeTrack.Web.Service.Tools.V1
+﻿namespace TimeTrack.Core
 {
     public interface IUseCaseConverter<T>
     {

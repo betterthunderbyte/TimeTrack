@@ -8,16 +8,16 @@ namespace TimeTrack.UseCase
 {
     public class CustomerUseCase : ICustomerUseCase
     {
-        IDbContext _timeTrackDbContext;
+        ITimeTrackDbContext _timeTrackTimeTrackDbContext;
 
-        public CustomerUseCase(IDbContext timeTrackDbContext)
+        public CustomerUseCase(ITimeTrackDbContext timeTrackTimeTrackDbContext)
         {
-            _timeTrackDbContext = timeTrackDbContext;
+            _timeTrackTimeTrackDbContext = timeTrackTimeTrackDbContext;
         }
 
         public async Task<UseCaseResult<CustomerEntity>> GetAllAsync()
         {
-            var r = await _timeTrackDbContext.Customers.ToListAsync();
+            var r = await _timeTrackTimeTrackDbContext.Customers.ToListAsync();
 
             return UseCaseResult<CustomerEntity>.Success(r);
         }
@@ -25,7 +25,7 @@ namespace TimeTrack.UseCase
         public async Task<UseCaseResult<CustomerEntity>> GetSingleAsync(int id)
         {
             
-            var r = await _timeTrackDbContext.Customers.SingleOrDefaultAsync(x => x.Id == id);
+            var r = await _timeTrackTimeTrackDbContext.Customers.SingleOrDefaultAsync(x => x.Id == id);
 
             if (r == null)
             {
@@ -66,7 +66,7 @@ namespace TimeTrack.UseCase
 
             customerEntity.Name = customerEntity.Name.Trim();
             
-            if (await _timeTrackDbContext.Customers.CountAsync(x => x.Name == customerEntity.Name) == 1)
+            if (await _timeTrackTimeTrackDbContext.Customers.CountAsync(x => x.Name == customerEntity.Name) == 1)
             {
                 return UseCaseResult<CustomerEntity>.Failure(UseCaseResultType.Conflict, new
                 {
@@ -77,15 +77,15 @@ namespace TimeTrack.UseCase
             
             customerEntity.Id = 0;
             
-            await _timeTrackDbContext.Customers.AddAsync(customerEntity);
-            await _timeTrackDbContext.SaveChangesAsync();
+            await _timeTrackTimeTrackDbContext.Customers.AddAsync(customerEntity);
+            await _timeTrackTimeTrackDbContext.SaveChangesAsync();
 
             return UseCaseResult<CustomerEntity>.Success(customerEntity);
         }
 
         public async Task<UseCaseResult<CustomerEntity>> DeleteSingleAsync(int id)
         {
-            if (await _timeTrackDbContext.Customers.CountAsync() == 1)
+            if (await _timeTrackTimeTrackDbContext.Customers.CountAsync() == 1)
             {
                 return UseCaseResult<CustomerEntity>.Failure(UseCaseResultType.Conflict, new
                 {
@@ -93,7 +93,7 @@ namespace TimeTrack.UseCase
                 });
             }
             
-            var r = await _timeTrackDbContext.Customers.Include(x => x.Activities).SingleOrDefaultAsync(x => x.Id == id);
+            var r = await _timeTrackTimeTrackDbContext.Customers.Include(x => x.Activities).SingleOrDefaultAsync(x => x.Id == id);
             if(r == null)
             {
                 return UseCaseResult<CustomerEntity>.Failure(UseCaseResultType.NotFound, null);
@@ -104,8 +104,8 @@ namespace TimeTrack.UseCase
                 return UseCaseResult<CustomerEntity>.Failure(UseCaseResultType.BadRequest, null);
             }
 
-            _timeTrackDbContext.Customers.Remove(r);
-            await _timeTrackDbContext.SaveChangesAsync();
+            _timeTrackTimeTrackDbContext.Customers.Remove(r);
+            await _timeTrackTimeTrackDbContext.SaveChangesAsync();
 
             return UseCaseResult<CustomerEntity>.Success(r);
         }
@@ -138,7 +138,7 @@ namespace TimeTrack.UseCase
             
             customer.Name = customer.Name.Trim();
 
-            if (await _timeTrackDbContext.Customers.CountAsync(x => x.Name == customer.Name) == 1)
+            if (await _timeTrackTimeTrackDbContext.Customers.CountAsync(x => x.Name == customer.Name) == 1)
             {
                 return UseCaseResult<CustomerEntity>.Failure(UseCaseResultType.Conflict, new
                 {
@@ -146,7 +146,7 @@ namespace TimeTrack.UseCase
                 });
             }
 
-            var r = await _timeTrackDbContext.Customers.SingleOrDefaultAsync(x => x.Id == id);
+            var r = await _timeTrackTimeTrackDbContext.Customers.SingleOrDefaultAsync(x => x.Id == id);
             if (r == null)
             {
                 return UseCaseResult<CustomerEntity>.Failure(UseCaseResultType.NotFound, new
@@ -156,7 +156,7 @@ namespace TimeTrack.UseCase
             }
 
             r.Name = customer.Name;
-            await _timeTrackDbContext.SaveChangesAsync();
+            await _timeTrackTimeTrackDbContext.SaveChangesAsync();
 
             return UseCaseResult<CustomerEntity>.Success(r);
         }

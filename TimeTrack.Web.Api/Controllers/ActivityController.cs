@@ -12,8 +12,6 @@ using TimeTrack.Core.DataTransfer.V1;
 using TimeTrack.Core.UseCase;
 using TimeTrack.UseCase;
 using TimeTrack.Web.Api.Common;
-using TimeTrack.Web.Service.Tools;
-using TimeTrack.Web.Service.Tools.V1;
 
 namespace TimeTrack.Web.Api.Controllers
 {

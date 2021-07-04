@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TimeTrack.Core.Model;
 
-namespace TimeTrack.UseCase
+namespace TimeTrack.Core
 {
-    public interface IDbContext
+    public interface ITimeTrackDbContext
     {
 
         public DbSet<ActivityEntity> Activities { get; set; }

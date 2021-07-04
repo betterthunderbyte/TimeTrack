@@ -1,7 +1,7 @@
 using System;
 using System.Globalization;
 
-namespace TimeTrack.Web.Service.Tools.V1
+namespace TimeTrack.Core
 {
     public static class TimeSpanConverter
     {

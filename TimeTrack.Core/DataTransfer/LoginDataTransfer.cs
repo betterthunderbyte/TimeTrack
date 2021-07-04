@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Xml.Serialization;
 
 namespace TimeTrack.Core.DataTransfer
 {
+    [XmlRoot(nameof(LoginDataTransfer))]
     public class LoginDataTransfer
     {
         private string _mail;
@@ -15,6 +17,7 @@ namespace TimeTrack.Core.DataTransfer
                 _mail = value.Trim();
             } 
         }
+  
         [MaxLength(30)]
         public string Password { get; set; }
 

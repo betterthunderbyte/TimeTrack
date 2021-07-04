@@ -15,6 +15,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using TimeTrack.Core;
 using TimeTrack.Core.Configuration;
 using TimeTrack.Core.Configuration.Validators;
 using TimeTrack.Core.UseCase;
@@ -23,6 +25,23 @@ using TimeTrack.Web.Api.Common;
 
 namespace TimeTrack.Web.Api
 {
+    public class XmlSchemaFilter : Swashbuckle.AspNetCore.SwaggerGen.ISchemaFilter
+    {
+        public void Apply(OpenApiSchema model, SchemaFilterContext context)
+        {
+            if (model.Properties == null) return;
+
+            foreach (var entry in model.Properties)
+            {
+                var name = entry.Key;
+                entry.Value.Xml = new OpenApiXml
+                {
+                    Name = name.Substring(0, 1).ToUpper() + name.Substring(1)
+                };
+            }
+        }
+    }
+    
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -35,12 +54,12 @@ namespace TimeTrack.Web.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<TimeTrackDbContext>(x =>
+            services.AddDbContext<TimeTrackTimeTrackDbContext>(x =>
             {
                 x.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
             });
             
-            services.AddScoped<IDbContext>(provider => provider.GetService<TimeTrackDbContext>());
+            services.AddScoped<ITimeTrackDbContext>(provider => provider.GetService<TimeTrackTimeTrackDbContext>());
             
             services.AddSingleton<JsonWebTokenConfigurationValidator>();
 
@@ -73,10 +92,11 @@ namespace TimeTrack.Web.Api
                         ClockSkew = TimeSpan.FromMinutes(1) 
                     };
                 });
-            
-            services.AddControllers();
+
+            services.AddControllers().AddXmlSerializerFormatters();
             services.AddSwaggerGen(c =>
             {
+                c.SchemaFilter<XmlSchemaFilter>();
                 c.ResolveConflictingActions(apiDescription =>
                 {
                     return apiDescription.First();
@@ -125,10 +145,10 @@ namespace TimeTrack.Web.Api
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, TimeTrackDbContext dbContext)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, TimeTrackTimeTrackDbContext timeTrackDbContext)
         {
-            dbContext.Setup();
-            
+            timeTrackDbContext.Setup();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

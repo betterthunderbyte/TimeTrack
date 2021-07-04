@@ -9,7 +9,6 @@ using TimeTrack.Core.DataTransfer.V1;
 using TimeTrack.UseCase;
 using TimeTrack.Web.Service.Common;
 using TimeTrack.Web.Service.Tools;
-using TimeTrack.Web.Service.Tools.V1;
 
 // ToDo(Thorben) Im Frontend wird das Datum falsch verarbeitet 
 namespace TimeTrack.Web.Service.Controllers.V1.Web

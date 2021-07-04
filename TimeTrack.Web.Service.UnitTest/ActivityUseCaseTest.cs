@@ -11,7 +11,7 @@ namespace TimeTrack.Web.Service.UnitTest
         [Fact]
         public async Task TestActivityCreate()
         {
-            using (var context = new TimeTrackDbContext())
+            using (var context = new TimeTrackTimeTrackDbContext())
             {
                 await context.Database.EnsureDeletedAsync();
                 context.Setup(true);
@@ -38,7 +38,7 @@ namespace TimeTrack.Web.Service.UnitTest
         [Fact]
         public async Task TestActivityOverwriteTimeBegin()
         {
-            using (var context = new TimeTrackDbContext())
+            using (var context = new TimeTrackTimeTrackDbContext())
             {
                 await context.Database.EnsureDeletedAsync();
                 context.Setup(true);
@@ -74,7 +74,7 @@ namespace TimeTrack.Web.Service.UnitTest
         [Fact]
         public async Task TestActivityOverwriteTimeCenter()
         {
-            using (var context = new TimeTrackDbContext())
+            using (var context = new TimeTrackTimeTrackDbContext())
             {
                 await context.Database.EnsureDeletedAsync();
                 context.Setup(true);
@@ -119,7 +119,7 @@ namespace TimeTrack.Web.Service.UnitTest
         [Fact]
         public async Task TestActivityOverwriteTimeEnd()
         {
-            using (var context = new TimeTrackDbContext())
+            using (var context = new TimeTrackTimeTrackDbContext())
             {
                 await context.Database.EnsureDeletedAsync();
                 context.Setup(true);

@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Xml.Serialization;
 using TimeTrack.Core.DataTransfer.V1;
-using TimeTrack.Web.Service.Tools.V1;
 
 namespace TimeTrack.Core.DataTransfer
 {
+    [XmlRoot(nameof(DateTimeDataTransfer))]
     public class DateTimeDataTransfer : IUseCaseConverter<DateTimeOffset>
     {
         public int Year { get; set; }

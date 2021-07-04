@@ -9,16 +9,16 @@ namespace TimeTrack.UseCase
 {
     public class ActivityTypeUseCase : IActivityTypeUseCase
     {
-        IDbContext _timeTrackDbContext;
+        ITimeTrackDbContext _timeTrackTimeTrackDbContext;
 
-        public ActivityTypeUseCase(IDbContext timeTrackDbContext)
+        public ActivityTypeUseCase(ITimeTrackDbContext timeTrackTimeTrackDbContext)
         {
-            _timeTrackDbContext = timeTrackDbContext;
+            _timeTrackTimeTrackDbContext = timeTrackTimeTrackDbContext;
         }
 
         public async Task<UseCaseResult<ActivityTypeEntity>> GetAllAsync()
         {
-            var r = await _timeTrackDbContext.ActivityTypes.ToListAsync();
+            var r = await _timeTrackTimeTrackDbContext.ActivityTypes.ToListAsync();
             return UseCaseResult<ActivityTypeEntity>.Success(r);
         }
 
@@ -29,7 +29,7 @@ namespace TimeTrack.UseCase
                 return UseCaseResult<ActivityTypeEntity>.Failure(UseCaseResultType.NotFound, new {Id = id, Message="Der Datensatz mit der Id konnte nicht gefunden werden!"});
             }
 
-            var r = await _timeTrackDbContext.ActivityTypes.Where(x => x.Id == id).SingleOrDefaultAsync();
+            var r = await _timeTrackTimeTrackDbContext.ActivityTypes.Where(x => x.Id == id).SingleOrDefaultAsync();
 
             if (r == null)
             {
@@ -76,15 +76,15 @@ namespace TimeTrack.UseCase
 
             activityTypeEntity.Title = activityTypeEntity.Title.Trim();
             
-            if (await _timeTrackDbContext.ActivityTypes.CountAsync(x => x.Title == activityTypeEntity.Title) > 0)
+            if (await _timeTrackTimeTrackDbContext.ActivityTypes.CountAsync(x => x.Title == activityTypeEntity.Title) > 0)
             {
                 return UseCaseResult<ActivityTypeEntity>.Failure(UseCaseResultType.Conflict, new {Message="Die Tätigkeit existiert bereits!", Title = activityTypeEntity.Title});
             }
 
             activityTypeEntity.Id = 0;
             
-            await _timeTrackDbContext.ActivityTypes.AddAsync(activityTypeEntity);
-            await _timeTrackDbContext.SaveChangesAsync();
+            await _timeTrackTimeTrackDbContext.ActivityTypes.AddAsync(activityTypeEntity);
+            await _timeTrackTimeTrackDbContext.SaveChangesAsync();
             return UseCaseResult<ActivityTypeEntity>.Success(activityTypeEntity);
         }
 
@@ -104,7 +104,7 @@ namespace TimeTrack.UseCase
                 return UseCaseResult<ActivityTypeEntity>.Failure(UseCaseResultType.BadRequest, new {Message="Der Titel ist länger als 100 Zeichen!", Title = activityTypeEntity.Title});
             }
             
-            var r = await _timeTrackDbContext.ActivityTypes.SingleOrDefaultAsync(x => x.Id == id);
+            var r = await _timeTrackTimeTrackDbContext.ActivityTypes.SingleOrDefaultAsync(x => x.Id == id);
 
             if (r == null)
             {
@@ -119,7 +119,7 @@ namespace TimeTrack.UseCase
                 activityTypeEntity.Title = activityTypeEntity.Title.Trim();
                 if (activityTypeEntity.Title.Length > 0)
                 {
-                    if (await _timeTrackDbContext.ActivityTypes.CountAsync(x => x.Title == activityTypeEntity.Title) > 0)
+                    if (await _timeTrackTimeTrackDbContext.ActivityTypes.CountAsync(x => x.Title == activityTypeEntity.Title) > 0)
                     {
                         return UseCaseResult<ActivityTypeEntity>.Failure(UseCaseResultType.Conflict, new {Message="Die Tätigkeit exisitert bereits.", Title=activityTypeEntity.Title});
                     }
@@ -130,13 +130,13 @@ namespace TimeTrack.UseCase
 
             r.Description = activityTypeEntity.Description ?? r.Description;
             
-            await _timeTrackDbContext.SaveChangesAsync();
+            await _timeTrackTimeTrackDbContext.SaveChangesAsync();
             return UseCaseResult<ActivityTypeEntity>.Success(r);    
         }
 
         public async Task<UseCaseResult<ActivityTypeEntity>> DeleteSingleAsync(int id)
         {
-            if (await _timeTrackDbContext.ActivityTypes.CountAsync() == 1)
+            if (await _timeTrackTimeTrackDbContext.ActivityTypes.CountAsync() == 1)
             {
                 return UseCaseResult<ActivityTypeEntity>.Failure(UseCaseResultType.Conflict, new
                 {
@@ -144,7 +144,7 @@ namespace TimeTrack.UseCase
                 });
             }
             
-            var r = await _timeTrackDbContext.ActivityTypes.Include(x => x.Activities).SingleOrDefaultAsync(x => x.Id == id);
+            var r = await _timeTrackTimeTrackDbContext.ActivityTypes.Include(x => x.Activities).SingleOrDefaultAsync(x => x.Id == id);
 
             if (r == null)
             {
@@ -162,8 +162,8 @@ namespace TimeTrack.UseCase
                 });
             }
             
-            _timeTrackDbContext.ActivityTypes.Remove(r);
-            await _timeTrackDbContext.SaveChangesAsync();
+            _timeTrackTimeTrackDbContext.ActivityTypes.Remove(r);
+            await _timeTrackTimeTrackDbContext.SaveChangesAsync();
             return UseCaseResult<ActivityTypeEntity>.Success(r);
         }
     }

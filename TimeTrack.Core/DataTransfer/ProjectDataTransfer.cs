@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Xml.Serialization;
 using TimeTrack.Core.Model;
-using TimeTrack.Web.Service.Tools.V1;
 
 namespace TimeTrack.Core.DataTransfer
 {
+    [XmlRoot(nameof(ProjectDataTransfer))]
     public class ProjectDataTransfer : IUseCaseConverter<ProjectEntity>
     {
         public int Id { get; set; }

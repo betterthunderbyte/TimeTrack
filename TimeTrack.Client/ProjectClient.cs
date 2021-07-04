@@ -10,7 +10,7 @@ namespace TimeTrack.Client
 {
     public class ProjectClient : WebClientBase
     {
-        public ProjectClient() { }
+      
         public ProjectClient(HttpClient client) : base(client) {}
         public ProjectClient(HttpClientHandler handler, HttpClient client) : base(client, handler) { }
 

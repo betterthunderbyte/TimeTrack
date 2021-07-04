@@ -11,7 +11,7 @@ namespace TimeTrack.Client
 {
     public class ActivityTypeClient : WebClientBase
     {
-        public ActivityTypeClient() : base() {}
+     
 
         public ActivityTypeClient(HttpClient client) : base(client) {}
         public ActivityTypeClient(HttpClientHandler handler, HttpClient client) : base(client, handler){}

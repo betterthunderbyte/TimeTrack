@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TimeTrack.Web.Service.Tools.V1;
 
 namespace TimeTrack.Core
 {

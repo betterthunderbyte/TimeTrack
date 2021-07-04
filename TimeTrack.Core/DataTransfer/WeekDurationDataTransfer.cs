@@ -1,7 +1,9 @@
-﻿using TimeTrack.Core.DataTransfer.V1;
+﻿using System.Xml.Serialization;
+using TimeTrack.Core.DataTransfer.V1;
 
 namespace TimeTrack.Core.DataTransfer
 {
+    [XmlRoot(nameof(WeekDurationDataTransfer))]
     public class WeekDurationDataTransfer
     {
         public TimeDataTransfer Monday { get; set; }

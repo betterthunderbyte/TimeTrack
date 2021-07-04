@@ -20,7 +20,6 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using TimeTrack.Core.Configuration;
 using TimeTrack.UseCase;
 using TimeTrack.Web.Service.Tools;
-using TimeTrack.Web.Service.Tools.V1;
 using TimeTrack.Web.Service.Validators;
 
 namespace TimeTrack.Web.Service
@@ -40,7 +39,7 @@ namespace TimeTrack.Web.Service
         /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<TimeTrackDbContext>(x =>
+            services.AddDbContext<TimeTrackTimeTrackDbContext>(x =>
             {
                 x.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
             });
@@ -139,10 +138,10 @@ namespace TimeTrack.Web.Service
         /// </summary>
         /// <param name="app"></param>
         /// <param name="env"></param>
-        /// <param name="dbContext"></param>
-        public void Configure(ILogger<Startup> logger, IApplicationBuilder app, IWebHostEnvironment env, TimeTrackDbContext dbContext)
+        /// <param name="timeTrackDbContext"></param>
+        public void Configure(ILogger<Startup> logger, IApplicationBuilder app, IWebHostEnvironment env, TimeTrackTimeTrackDbContext timeTrackDbContext)
         {
-            dbContext.Setup();
+            timeTrackDbContext.Setup();
 
             if (Configuration.GetValue<bool>("EnableCustomLogging"))
             {

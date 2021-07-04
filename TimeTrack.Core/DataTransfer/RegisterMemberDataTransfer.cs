@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Xml.Serialization;
 
 namespace TimeTrack.Core.DataTransfer
 {
+    [XmlRoot(nameof(RegisterMemberDataTransfer))]
     public class RegisterMemberDataTransfer
     {
         [MaxLength(25)]

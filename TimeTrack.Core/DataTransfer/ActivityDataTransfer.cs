@@ -1,9 +1,10 @@
-﻿using TimeTrack.Core.DataTransfer.V1;
+﻿using System.Xml.Serialization;
+using TimeTrack.Core.DataTransfer.V1;
 using TimeTrack.Core.Model;
-using TimeTrack.Web.Service.Tools.V1;
 
 namespace TimeTrack.Core.DataTransfer
 {
+    [XmlRoot(nameof(ActivityDataTransfer))]
     public class ActivityDataTransfer : IUseCaseConverter<ActivityEntity>
     {
         public int Id { get; set; }

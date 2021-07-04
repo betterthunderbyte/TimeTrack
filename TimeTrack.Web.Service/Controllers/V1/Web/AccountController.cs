@@ -9,7 +9,6 @@ using TimeTrack.Core.DataTransfer;
 using TimeTrack.Core.Model;
 using TimeTrack.UseCase;
 using TimeTrack.Web.Service.Tools;
-using TimeTrack.Web.Service.Tools.V1;
 
 namespace TimeTrack.Web.Service.Controllers.V1.Web
 {

@@ -1,4 +1,4 @@
-using TimeTrack.Web.Service.Tools.V1;
+using TimeTrack.Core;
 using Xunit;
 
 namespace TimeTrack.Web.Service.UnitTest

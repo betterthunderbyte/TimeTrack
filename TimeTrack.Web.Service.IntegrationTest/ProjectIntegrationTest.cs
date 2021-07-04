@@ -25,7 +25,7 @@ namespace TimeTrack.Web.Service.IntegrationTest
                     .UseStartup<Startup>()
             );
 
-            var db = server.Services.GetService(typeof(TimeTrackDbContext)) as TimeTrackDbContext;
+            var db = server.Services.GetService(typeof(TimeTrackTimeTrackDbContext)) as TimeTrackTimeTrackDbContext;
             
             db.Database.EnsureDeleted();
             db.Database.EnsureCreated();

@@ -12,17 +12,17 @@ namespace TimeTrack.UseCase
 {
     public class ActivityUseCase : IActivityUseCase
     {
-        IDbContext _timeTrackDbContext;
+        ITimeTrackDbContext _timeTrackTimeTrackDbContext;
 
-        public ActivityUseCase(IDbContext timeTrackDbContext)
+        public ActivityUseCase(ITimeTrackDbContext timeTrackTimeTrackDbContext)
         {
-            _timeTrackDbContext = timeTrackDbContext;
+            _timeTrackTimeTrackDbContext = timeTrackTimeTrackDbContext;
         }
 
         // ToDo UnitTest
         public async Task<UseCaseResult<ActivityEntity>> GetAllFromUserAsync(int userId)
         {
-            var r = await _timeTrackDbContext.Activities.Where(x => x.OwnerFk == userId).ToListAsync();
+            var r = await _timeTrackTimeTrackDbContext.Activities.Where(x => x.OwnerFk == userId).ToListAsync();
             
             return UseCaseResult<ActivityEntity>.Success(r);
         }
@@ -37,7 +37,7 @@ namespace TimeTrack.UseCase
             var saturday = dateTime.GetSaturdayInThisWeek();
             var sunday = dateTime.GetSundayInThisWeek();
 
-            var activities = await _timeTrackDbContext.Activities.Where(x => x.OwnerFk == userId).ToListAsync();
+            var activities = await _timeTrackTimeTrackDbContext.Activities.Where(x => x.OwnerFk == userId).ToListAsync();
 
             var mondayTicks = activities.Where(x => x.Begin >= monday.GetStart() && x.Begin <= monday.GetEnd())
                 .Sum(x => x.Duration.Ticks);
@@ -88,13 +88,13 @@ namespace TimeTrack.UseCase
          
         public async Task<UseCaseResult<ActivityEntity>> GetAllAsync()
         {
-            var r = (await _timeTrackDbContext.Activities.ToArrayAsync()).ToList();
+            var r = (await _timeTrackTimeTrackDbContext.Activities.ToArrayAsync()).ToList();
             return UseCaseResult<ActivityEntity>.Success(r);
         }
         
         public async Task<UseCaseResult<ActivityEntity>> GetSingleAsync(int id)
         {
-            var entity = await _timeTrackDbContext.Activities.SingleOrDefaultAsync(x => x.Id == id);
+            var entity = await _timeTrackTimeTrackDbContext.Activities.SingleOrDefaultAsync(x => x.Id == id);
 
             if (entity == null)
             {
@@ -117,7 +117,7 @@ namespace TimeTrack.UseCase
                 });
             }
             
-            if (await _timeTrackDbContext.ActivityTypes.CountAsync(x => x.Id == activityEntity.ActivityTypeFk) == 0)
+            if (await _timeTrackTimeTrackDbContext.ActivityTypes.CountAsync(x => x.Id == activityEntity.ActivityTypeFk) == 0)
             {
                 return UseCaseResult<ActivityEntity>.Failure(UseCaseResultType.NotFound, new
                 {
@@ -126,7 +126,7 @@ namespace TimeTrack.UseCase
                 });
             }
             
-            if (await _timeTrackDbContext.Customers.CountAsync(x => x.Id == activityEntity.CustomerFk) == 0)
+            if (await _timeTrackTimeTrackDbContext.Customers.CountAsync(x => x.Id == activityEntity.CustomerFk) == 0)
             {
                 return UseCaseResult<ActivityEntity>.Failure(UseCaseResultType.NotFound, new
                 {
@@ -135,7 +135,7 @@ namespace TimeTrack.UseCase
                 });
             }
             
-            if (await _timeTrackDbContext.Projects.CountAsync(x => x.Id == activityEntity.ProjectFk) == 0)
+            if (await _timeTrackTimeTrackDbContext.Projects.CountAsync(x => x.Id == activityEntity.ProjectFk) == 0)
             {
                 return UseCaseResult<ActivityEntity>.Failure(UseCaseResultType.NotFound, new
                 {
@@ -144,7 +144,7 @@ namespace TimeTrack.UseCase
                 });
             }
             
-            if (await _timeTrackDbContext.Members.CountAsync(x => x.Id == activityEntity.OwnerFk) == 0)
+            if (await _timeTrackTimeTrackDbContext.Members.CountAsync(x => x.Id == activityEntity.OwnerFk) == 0)
             {
                 return UseCaseResult<ActivityEntity>.Failure(UseCaseResultType.NotFound, new
                 {
@@ -178,16 +178,16 @@ namespace TimeTrack.UseCase
             }
             
             await ModifyAllActivitiesConflictWith(activityEntity);
-            await _timeTrackDbContext.Activities.AddAsync(activityEntity);
+            await _timeTrackTimeTrackDbContext.Activities.AddAsync(activityEntity);
             
-            await _timeTrackDbContext.SaveChangesAsync();
+            await _timeTrackTimeTrackDbContext.SaveChangesAsync();
 
             return UseCaseResult<ActivityEntity>.Success(activityEntity);
         }
 
         public async Task<UseCaseResult<ActivityEntity>> DeleteSingleAsync(int id)
         {
-            var r = await _timeTrackDbContext.Activities.SingleOrDefaultAsync(x => x.Id == id);
+            var r = await _timeTrackTimeTrackDbContext.Activities.SingleOrDefaultAsync(x => x.Id == id);
 
             if (r == null)
             {
@@ -197,8 +197,8 @@ namespace TimeTrack.UseCase
                 });
             }
 
-            _timeTrackDbContext.Activities.Remove(r);
-            await _timeTrackDbContext.SaveChangesAsync();
+            _timeTrackTimeTrackDbContext.Activities.Remove(r);
+            await _timeTrackTimeTrackDbContext.SaveChangesAsync();
             
             return UseCaseResult<ActivityEntity>.Success(r);
         }
@@ -206,7 +206,7 @@ namespace TimeTrack.UseCase
         // ToDo UnitTest
         public async Task<UseCaseResult<ActivityEntity>> DeleteSingleFromUserAsync(int userId, int id)
         {
-            var r = await _timeTrackDbContext.Activities.SingleOrDefaultAsync(x => x.OwnerFk == userId && x.Id == id);
+            var r = await _timeTrackTimeTrackDbContext.Activities.SingleOrDefaultAsync(x => x.OwnerFk == userId && x.Id == id);
 
             if (r == null)
             {
@@ -216,8 +216,8 @@ namespace TimeTrack.UseCase
                 });
             }
 
-            _timeTrackDbContext.Activities.Remove(r);
-            await _timeTrackDbContext.SaveChangesAsync();
+            _timeTrackTimeTrackDbContext.Activities.Remove(r);
+            await _timeTrackTimeTrackDbContext.SaveChangesAsync();
             
             return UseCaseResult<ActivityEntity>.Success(r);
         }
@@ -233,7 +233,7 @@ namespace TimeTrack.UseCase
                 });
             }
             
-            if (await _timeTrackDbContext.Activities.CountAsync(x => x.OwnerFk == userId && x.Id == id) == 0)
+            if (await _timeTrackTimeTrackDbContext.Activities.CountAsync(x => x.OwnerFk == userId && x.Id == id) == 0)
             {
                 return UseCaseResult<ActivityEntity>.Failure(UseCaseResultType.NotFound, new
                 {
@@ -256,7 +256,7 @@ namespace TimeTrack.UseCase
                 });
             }
             
-            if (await _timeTrackDbContext.Activities.CountAsync(x => x.Id == id) == 0)
+            if (await _timeTrackTimeTrackDbContext.Activities.CountAsync(x => x.Id == id) == 0)
             {
                 return UseCaseResult<ActivityEntity>.Failure(UseCaseResultType.NotFound, new
                 {
@@ -264,7 +264,7 @@ namespace TimeTrack.UseCase
                 });
             }
             
-            if (await _timeTrackDbContext.ActivityTypes.CountAsync(x => x.Id == activityEntity.ActivityTypeFk) == 0)
+            if (await _timeTrackTimeTrackDbContext.ActivityTypes.CountAsync(x => x.Id == activityEntity.ActivityTypeFk) == 0)
             {
                 return UseCaseResult<ActivityEntity>.Failure(UseCaseResultType.NotFound, new
                 {
@@ -273,7 +273,7 @@ namespace TimeTrack.UseCase
                 });
             }
             
-            if (await _timeTrackDbContext.Customers.CountAsync(x => x.Id == activityEntity.CustomerFk) == 0)
+            if (await _timeTrackTimeTrackDbContext.Customers.CountAsync(x => x.Id == activityEntity.CustomerFk) == 0)
             {
                 return UseCaseResult<ActivityEntity>.Failure(UseCaseResultType.NotFound, new
                 {
@@ -282,7 +282,7 @@ namespace TimeTrack.UseCase
                 });
             }
             
-            if (await _timeTrackDbContext.Projects.CountAsync(x => x.Id == activityEntity.ProjectFk) == 0)
+            if (await _timeTrackTimeTrackDbContext.Projects.CountAsync(x => x.Id == activityEntity.ProjectFk) == 0)
             {
                 return UseCaseResult<ActivityEntity>.Failure(UseCaseResultType.NotFound, new
                 {
@@ -291,7 +291,7 @@ namespace TimeTrack.UseCase
                 });
             }
             
-            if (await _timeTrackDbContext.Members.CountAsync(x => x.Id == activityEntity.OwnerFk) == 0)
+            if (await _timeTrackTimeTrackDbContext.Members.CountAsync(x => x.Id == activityEntity.OwnerFk) == 0)
             {
                 return UseCaseResult<ActivityEntity>.Failure(UseCaseResultType.NotFound, new
                 {
@@ -300,7 +300,7 @@ namespace TimeTrack.UseCase
                 });
             }
             
-            var r = await _timeTrackDbContext.Activities.SingleOrDefaultAsync(x => x.Id == id);
+            var r = await _timeTrackTimeTrackDbContext.Activities.SingleOrDefaultAsync(x => x.Id == id);
 
             if (r == null)
             {
@@ -331,7 +331,7 @@ namespace TimeTrack.UseCase
             var time = activityEntity.Begin.TimeOfDay + activityEntity.Duration - TimeSpan.FromDays(1);
             activityEntity.Duration = activityEntity.Duration.Subtract(time);
             
-            await _timeTrackDbContext.SaveChangesAsync();
+            await _timeTrackTimeTrackDbContext.SaveChangesAsync();
             
             return UseCaseResult<ActivityEntity>.Success(r);
         }
@@ -346,7 +346,7 @@ namespace TimeTrack.UseCase
             var max = activityEntity.Begin + activityEntity.Duration;
             var min = activityEntity.Begin;
 
-            var activityEntities = (await _timeTrackDbContext.Activities.Where(x => x.OwnerFk == activityEntity.OwnerFk)
+            var activityEntities = (await _timeTrackTimeTrackDbContext.Activities.Where(x => x.OwnerFk == activityEntity.OwnerFk)
                 .ToArrayAsync())
                 .Where(x => x.Begin + x.Duration >= min && x.Begin <= max);
             
@@ -381,7 +381,7 @@ namespace TimeTrack.UseCase
                     newOne.OwnerFk = entity.OwnerFk;
                     entity.Duration = activityEntity.Begin - entity.Begin;
 
-                    await _timeTrackDbContext.Activities.AddAsync(newOne);
+                    await _timeTrackTimeTrackDbContext.Activities.AddAsync(newOne);
                 }
                 else if(activityEntity.Begin > entity.Begin && activityEntity.Begin + activityEntity.Duration >= entity.Begin + entity.Duration)
                 {
@@ -396,7 +396,7 @@ namespace TimeTrack.UseCase
                
             }
 
-            await _timeTrackDbContext.SaveChangesAsync();
+            await _timeTrackTimeTrackDbContext.SaveChangesAsync();
         }
 
     }

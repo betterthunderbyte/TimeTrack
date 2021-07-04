@@ -10,9 +10,9 @@ namespace TimeTrack.UseCase
 {
     public class OtherUseCase : IOtherUseCase
     {
-        private IDbContext _context;
+        private ITimeTrackDbContext _context;
         
-        public OtherUseCase(IDbContext context)
+        public OtherUseCase(ITimeTrackDbContext context)
         {
             _context = context;
         }

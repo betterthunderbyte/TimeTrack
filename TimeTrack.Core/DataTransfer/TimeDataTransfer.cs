@@ -1,8 +1,9 @@
 ﻿using System;
-using TimeTrack.Web.Service.Tools.V1;
+using System.Xml.Serialization;
 
 namespace TimeTrack.Core.DataTransfer
 {
+    [XmlRoot(nameof(TimeDataTransfer))]
     public class TimeDataTransfer : IUseCaseConverter<TimeSpan>
     {
         public int Hours { get; set; }

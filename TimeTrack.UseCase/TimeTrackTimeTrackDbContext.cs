@@ -1,14 +1,15 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
+using TimeTrack.Core;
 using TimeTrack.Core.Model;
 
 namespace TimeTrack.UseCase
 {
-    public class TimeTrackDbContext : DbContext, IDbContext
+    public class TimeTrackTimeTrackDbContext : DbContext, ITimeTrackDbContext
     {
-        public TimeTrackDbContext() { }
+        public TimeTrackTimeTrackDbContext() { }
 
-        public TimeTrackDbContext(DbContextOptions<TimeTrackDbContext> options) : base(options) { }
+        public TimeTrackTimeTrackDbContext(DbContextOptions<TimeTrackTimeTrackDbContext> options) : base(options) { }
 
         /// <summary>
         /// Die Datenbank vorbereiten sowie Standardwerte setzen

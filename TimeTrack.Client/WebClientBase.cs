@@ -5,18 +5,10 @@ namespace TimeTrack.Client
 {
     public abstract class WebClientBase
     {
-        public Uri BaseAddress
-        {
-            get => HttpClient.BaseAddress;
-            set {
-                HttpClient.BaseAddress = value;
-            }
-        }
+        protected HttpClientHandler HttpClientHandler { get; set; }
+        protected HttpClient HttpClient { get; set; }
 
-        public HttpClientHandler HttpClientHandler { get; set; }
-        public HttpClient HttpClient { get; set; }
-
-        public WebClientBase()
+        public WebClientBase(string baseAddress)
         {
             HttpClientHandler = new HttpClientHandler() {};
             HttpClientHandler.ClientCertificateOptions = ClientCertificateOption.Manual;
@@ -25,7 +17,7 @@ namespace TimeTrack.Client
                 return true;
             };
             HttpClient = new HttpClient(HttpClientHandler);
-            HttpClient.BaseAddress = BaseAddress;
+            HttpClient.BaseAddress = new Uri(baseAddress);
         }
         
         public WebClientBase(HttpClient client)

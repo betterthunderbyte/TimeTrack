@@ -1,4 +1,8 @@
 ﻿using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text.Json;
+using System.Threading.Tasks;
+using TimeTrack.Core.DataTransfer;
 
 namespace TimeTrack.Client
 {
@@ -35,6 +39,31 @@ namespace TimeTrack.Client
         private ActivityTypeClient _activityTypeClient;
         private ActivityClient _activityClient;
         
-        
+        public TimeTrackClient(string baseAddress) : base(baseAddress)
+        {
+        }
+
+        public TimeTrackClient(HttpClient client) : base(client)
+        {
+        }
+
+        public TimeTrackClient(HttpClient client, HttpClientHandler handler) : base(client, handler)
+        {
+        }
+
+        public async Task LoginAsync(string mail, string password)
+        {
+            var message = new HttpRequestMessage(HttpMethod.Post, "/v1/api/Account/login");
+            
+            var httpResponseMessage = await HttpClient.SendAsync(message);
+            if (httpResponseMessage.IsSuccessStatusCode)
+            {
+                var r = JsonSerializer.Deserialize<NewTokenDataTransfer>(await httpResponseMessage.Content.ReadAsStringAsync(), new JsonSerializerOptions(JsonSerializerDefaults.Web));
+                if (r != null)
+                {
+                    HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", r.Token);
+                }
+            }
+        }
     }
 }
